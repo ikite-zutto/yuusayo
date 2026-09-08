@@ -2,43 +2,71 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <!-- 이 부분만 수정되었습니다: 모바일에서도 PC 너비(1280px)로 강제 인식하도록 변경 -->
+    <!-- 원본 서사 페이지의 뷰포트 유지 (모바일에서도 PC너비 강제 인식) -->
     <meta name="viewport" content="width=1280">
     <title>너라는 유예</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- 오직 Noto Sans KR 폰트 하나만 사용 -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    
+    <!-- 폰트: 프로필용(Pretendard) & 서사용(Noto Sans KR) 모두 로드 -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@200;300;400;500;700;900&display=swap" rel="stylesheet">
+    
     <script>
         tailwind.config = {
             theme: {
                 extend: {
+                    fontFamily: { 
+                        sans: ['"Pretendard Variable"', 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif'],
+                        noto: ['"Noto Sans KR"', 'sans-serif'],
+                    },
                     colors: {
                         yeonji: '#52525b', // 유우 컬러 (Zinc 600)
                         dahee: '#a1a1aa',  // 사요 컬러 (Zinc 400)
-                        paper: '#f4f4f5',  // 배경 (Zinc 100)
+                        paper: '#f4f4f5',  // 서사 배경 (Zinc 100)
+                        char1: '#0f172a',  // 유우 프로필 포인트
+                        char2: '#0f172a',  // 사요 프로필 포인트
                     }
                 }
             }
         }
     </script>
+    
     <style>
-        body {
-            font-family: 'Noto Sans KR', sans-serif;
-            scroll-behavior: smooth;
+        /* ==========================================
+           공통 & 랜딩 페이지 스타일
+        ========================================== */
+        body { background-color: #000; scroll-behavior: smooth; }
+        
+        .vf-corner { position: absolute; width: 30px; height: 30px; border: 1px solid rgba(255,255,255,0.6); }
+        .vf-tl { top: 50px; left: 50px; border-right: none; border-bottom: none; }
+        .vf-tr { top: 50px; right: 50px; border-left: none; border-bottom: none; }
+        .vf-bl { bottom: 50px; left: 50px; border-right: none; border-top: none; }
+        .vf-br { bottom: 50px; right: 50px; border-left: none; border-top: none; }
+        
+        @keyframes flash { 0% { opacity: 0; } 40% { opacity: 1; } 100% { opacity: 0; } }
+        .flash-active { animation: flash 1s ease-out forwards; }
+        
+        .nav-link { position: relative; display: inline-block; cursor: pointer; }
+        .nav-link::after {
+            content: ''; position: absolute; bottom: -6px; left: 0; width: 100%; height: 1px;
+            background-color: rgba(255, 255, 255, 0.8); transform: scaleX(0);
+            transform-origin: center; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
+        .nav-link:hover::after { transform: scaleX(1); }
+
+        /* ==========================================
+           원본 서사 페이지 스타일 (그대로 보존)
+        ========================================== */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #d4d4d8; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #a1a1aa; }
         
-        /* 깔끔하고 세련된 말풍선 스타일 */
         .glass-panel {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(228, 228, 231, 0.8);
-            box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.05);
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px);
+            border: 1px solid rgba(228, 228, 231, 0.8); box-shadow: 0 4px 10px -2px rgba(0, 0, 0, 0.05);
         }
-
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
 
@@ -46,414 +74,855 @@
             0% { opacity: 0; transform: scale(0.9) translateY(10px); }
             100% { opacity: 1; transform: scale(1) translateY(0); }
         }
-        .chat-bubble {
-            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-            opacity: 0;
-        }
+        .chat-bubble { animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; opacity: 0; }
+
+        /* ==========================================
+           원본 프로필 페이지 스타일 (그대로 보존)
+        ========================================== */
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; transition: background 0.3s; }
+        .custom-scroll:hover::-webkit-scrollbar-thumb { background: #cbd5e1; }
+
+        .expand-content { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s ease-out; }
+        .expand-content.active { grid-template-rows: 1fr; }
+        .expand-inner { overflow: hidden; }
+
+        @keyframes eqPlay { 0%, 100% { height: 4px; } 50% { height: 16px; } }
+        .music-player.playing .eq-bar { animation: eqPlay 1s ease-in-out infinite; }
+        .music-player.playing .eq-bar:nth-child(2) { animation-delay: 0.2s; }
+        .music-player.playing .eq-bar:nth-child(3) { animation-delay: 0.4s; }
+        .music-player.playing .eq-bar:nth-child(4) { animation-delay: 0.1s; }
+        
+        .music-player.playing .play-icon { display: none; }
+        .music-player.playing .pause-icon { display: block; }
+        .music-player:not(.playing) .play-icon { display: block; }
+        .music-player:not(.playing) .pause-icon { display: none; }
     </style>
 </head>
-<body class="bg-paper text-zinc-800 antialiased selection:bg-dahee selection:text-white relative overflow-x-hidden">
+<!-- 초기에는 스크롤을 막아둠 (랜딩 페이지용) -->
+<body class="overflow-hidden relative">
 
-    <audio id="bgm" loop><source src="bgm.mp3" type="audio/mpeg"></audio>
+    <!-- 오디오 소스 (경로 및 파일명 변경 완료) -->
+    <audio id="audio-narrative" src="bgm1.mp3" loop preload="none"></audio>
+    <audio id="audio-char1" src="bgm2.mp3" loop preload="none"></audio>
+    <audio id="audio-char2" src="bgm3.mp3" loop preload="none"></audio>
 
-    <div id="normal-content">
-        <!-- Header -->
-        <header class="relative w-full py-20 px-6 flex flex-col items-center justify-center text-center overflow-hidden">
-            <!-- 어두웠던 블러 효과를 지우고, 깔끔하고 화사한 화이트 그라데이션으로 변경 -->
-            <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/90 via-transparent to-transparent"></div>
-            
-            <div class="relative z-10 max-w-4xl mx-auto pt-10">
-                <span class="text-xs md:text-sm font-bold tracking-[0.4em] text-zinc-400 block mb-4 uppercase">너라는 유예</span>
-                
-                <h1 class="text-4xl md:text-5xl font-black text-zinc-800 mt-2 mb-6 leading-tight tracking-tight">
-                    셔터음이 울린 밤,<br class="hidden md:block"> 
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-yeonji to-dahee">서로의 영원한 닻</span>이 되기까지.
-                </h1>
-                <p class="text-lg text-zinc-500 max-w-2xl mx-auto leading-relaxed font-light">
-                    무대 위의 거짓말쟁이 아이돌과, 세상을 렌즈 너머로 보는 시한부 사진가.<br>
-                    서로의 상실을 채우며 평생을 약속한, 한 장의 서사.
-                </p>
+
+    <!-- ==========================================
+         [페이지 0] 랜딩 화면 (하이브리드 셔터 연출)
+    =========================================== -->
+    <div id="page-landing" class="fixed inset-0 z-[100] flex flex-col items-center justify-center font-noto select-none bg-black transition-opacity duration-700 opacity-100">
+        <img src="https://imgur.com/YULm0M1.png" class="absolute inset-0 w-full h-full object-cover transition-all duration-[1.5s] ease-out scale-110" id="bg-image">
+        <div id="blur-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-xl transition-all duration-1000"></div>
+
+        <div id="viewfinder-ui" class="absolute inset-0 pointer-events-none transition-opacity duration-700 z-10">
+            <div class="vf-corner vf-tl"></div><div class="vf-corner vf-tr"></div>
+            <div class="vf-corner vf-bl"></div><div class="vf-corner vf-br"></div>
+            <div class="absolute top-12 left-1/2 -translate-x-1/2 flex gap-6 text-[10px] font-mono text-white/60 tracking-widest">
+                <span class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div> REC</span>
+                <span>ISO 400</span><span>F 1.8</span>
             </div>
-        </header>
+        </div>
 
-        <!-- Profile Section -->
-        <section id="profile" class="max-w-5xl mx-auto px-6 py-10">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16">
-                <!-- 유우 프로필 -->
-                <div class="flex flex-col gap-4">
-                    <div class="relative w-full aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-2xl group border border-zinc-200/50">
-                        <img src="https://imgur.com/7AWbHNf.png" alt="시노노메 유우" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/95 via-zinc-900/40 to-transparent pointer-events-none"></div>
-                        <div class="absolute bottom-0 left-0 w-full p-8 text-white flex flex-col justify-end h-1/2 pointer-events-none">
-                            <div class="flex items-end gap-3 mb-1">
-                                <h2 class="text-4xl font-bold tracking-tight">시노노메 유우</h2>
-                                <span class="text-2xl font-light opacity-90">지하돌 '아리스'</span>
-                            </div>
-                            <p class="text-zinc-300 font-medium mb-4 text-sm tracking-wide">#맨즈지하돌 #20세 #멘헤라 #병적순애</p>
-                            <div class="overflow-y-auto hide-scroll max-h-[120px] pr-2 pointer-events-auto">
-                                <p class="text-sm text-zinc-200 leading-relaxed font-light">
-                                    도쿄에서 활동하는 인기 맨즈 지하돌 '앨리스 해프닝'의 멤버. 무대 위에서는 금발 벽안의 완벽한 왕자님을 연기하지만, 본모습은 피곤에 절어 있는 청년이다. 무대 위의 자신을 거짓말쟁이처럼 느끼며 천천히 부서져가던 중, 옥상에서 사요와 마주치고 단 하루 만에 사랑에 빠져버린다.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="glass-panel rounded-2xl p-5 border-l-4 border-yeonji relative ml-4 mt-2">
-                        <div class="absolute -top-3 left-6 w-6 h-6 glass-panel rotate-45 border-r-0 border-b-0"></div>
-                        <p class="text-zinc-700 text-sm font-medium leading-relaxed z-10 relative">
-                            "영화였다면 여기서 엔드롤인가. 그래도 계속되는 거지. 내일도, 모레도."
-                        </p>
-                    </div>
-                </div>
-
-                <!-- 사요 프로필 -->
-                <div class="flex flex-col gap-4">
-                    <div class="relative w-full aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-2xl group border border-zinc-200/50">
-                        <img src="https://imgur.com/v7RMnz3.png" alt="아야세 사요" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/95 via-zinc-900/40 to-transparent pointer-events-none"></div>
-                        <div class="absolute bottom-0 left-0 w-full p-8 text-white flex flex-col justify-end h-1/2 pointer-events-none">
-                            <div class="flex items-end gap-3 mb-1">
-                                <h2 class="text-4xl font-bold tracking-tight">아야세 사요</h2>
-                                <span class="text-2xl font-light opacity-90">프리랜서 사진가</span>
-                            </div>
-                            <p class="text-zinc-300 font-medium mb-4 text-sm tracking-wide">#시한부 #20세 #투명한시선 #담담한직진</p>
-                            <div class="overflow-y-auto hide-scroll max-h-[120px] pr-2 pointer-events-auto">
-                                <p class="text-sm text-zinc-200 leading-relaxed font-light">
-                                    스무 살의 프리랜서 사진가. 눈 밑에 점이 있으며 늘 차분하고 담담하다. '확장성 심근병증'이라는 난병을 앓고 있어 언제 심장이 멈출지 모르는 삶을 살고 있다. 유우의 진짜 모습을 꿰뚫어 보고 온전히 받아들이며, 마지막 순간까지 유우와 함께하기로 약속한다.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="glass-panel rounded-2xl p-5 border-l-4 border-dahee relative ml-4 mt-2">
-                        <div class="absolute -top-3 left-6 w-6 h-6 glass-panel rotate-45 border-r-0 border-b-0"></div>
-                        <p class="text-zinc-700 text-sm font-medium leading-relaxed z-10 relative">
-                            "심장박동이 하나로 포개어지고 나서도, 그 마지막을 다할 때까지. 나도, 유우의 곁에 있을게."
-                        </p>
-                    </div>
-                </div>
+        <button id="shutter-btn" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-4 group z-20 outline-none">
+            <div class="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-500 group-hover:scale-110 relative">
+                <div class="absolute inset-0 border border-white/30 rounded-full group-hover:border-white/60 transition-colors duration-500"></div>
+                <div class="w-12 h-12 border border-dashed border-white/40 rounded-full group-hover:rotate-90 transition-all duration-700"></div>
+                <div class="absolute w-1 h-1 bg-white/80 rounded-full group-hover:bg-white transition-colors"></div>
             </div>
-        </section>
+            <span class="text-[10px] tracking-[0.4em] font-light text-white/50 group-hover:text-white/90 transition-colors duration-500 uppercase">Focus</span>
+        </button>
 
-        <!-- 호칭 & 메신저 섹션 -->
-        <section id="communication" class="max-w-5xl mx-auto px-6 py-20 border-t border-zinc-200/60">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                
-                <!-- 왼쪽: 호칭 정리 -->
-                <div class="space-y-10">
-                    <div class="space-y-2">
-                        <span class="text-xs font-bold text-zinc-400 tracking-widest uppercase">Relationship Dynamics</span>
-                        <h3 class="text-3xl font-black text-zinc-800">우리가 서로를 부를 때</h3>
-                        <p class="text-sm text-zinc-500 font-light leading-relaxed">그 속에 담긴 온도는 누구보다 확실한 두 사람의 호칭.</p>
-                    </div>
+        <div id="flash-screen" class="absolute inset-0 bg-white opacity-0 pointer-events-none z-30"></div>
 
-                    <div class="space-y-6">
-                        <div class="bg-white/60 backdrop-blur-md p-6 rounded-3xl border border-dahee/20 shadow-sm relative overflow-hidden group">
-                            <div class="absolute top-0 left-0 w-1.5 h-full bg-dahee"></div>
-                            <h4 class="text-sm font-bold text-zinc-700 mb-4 flex items-center gap-2">
-                                <img src="https://imgur.com/v7RMnz3.png" class="w-6 h-6 rounded-full object-cover">
-                                아야세 사요 <span class="text-zinc-400 mx-1">→</span> 시노노메 유우
-                            </h4>
-                            <div class="flex flex-wrap gap-2">
-                                <span class="px-4 py-1.5 bg-white rounded-full text-sm font-medium text-zinc-600 shadow-sm border border-zinc-100 group-hover:-translate-y-1 transition-transform delay-75">"유우"</span>
-                                <span class="px-4 py-1.5 bg-dahee/10 rounded-full text-sm font-bold text-dahee shadow-sm border border-dahee/20 group-hover:-translate-y-1 transition-transform delay-150">"유우유우"</span>
-                            </div>
-                            <p class="text-xs text-zinc-400 mt-3 font-light ml-1">* 첫 만남 사진을 블루투스로 보내다 설정된 기기 이름 'YuuYuu'를 보고 그대로 부른 호칭.</p>
-                        </div>
-
-                        <div class="bg-white/60 backdrop-blur-md p-6 rounded-3xl border border-yeonji/20 shadow-sm relative overflow-hidden group">
-                            <div class="absolute top-0 left-0 w-1.5 h-full bg-yeonji"></div>
-                            <h4 class="text-sm font-bold text-zinc-700 mb-4 flex items-center gap-2">
-                                <img src="https://imgur.com/7AWbHNf.png" class="w-6 h-6 rounded-full object-cover">
-                                시노노메 유우 <span class="text-zinc-400 mx-1">→</span> 아야세 사요
-                            </h4>
-                            <div class="flex flex-wrap gap-2 items-center">
-                                <span class="px-4 py-1.5 bg-white rounded-full text-sm font-medium text-zinc-600 shadow-sm border border-zinc-100 group-hover:-translate-y-1 transition-transform">"너"</span>
-                                <span class="px-4 py-1.5 bg-yeonji/10 rounded-full text-sm font-bold text-yeonji shadow-sm border border-yeonji/30 group-hover:-translate-y-1 transition-transform delay-75 relative">
-                                    "사요"
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 오른쪽: 메신저 UI -->
-                <div class="flex justify-center lg:justify-end">
-                    <div class="w-full max-w-sm bg-white rounded-[2.5rem] shadow-2xl border-4 border-zinc-100 overflow-hidden flex flex-col h-[500px] relative">
-                        <div class="bg-zinc-50/90 backdrop-blur-md border-b border-zinc-200 p-4 flex items-center gap-3 sticky top-0 z-10">
-                            <div class="w-2 h-2 rounded-full bg-dahee animate-pulse"></div>
-                            <h4 class="font-bold text-zinc-700 text-sm flex-1">사요</h4>
-                            <svg class="w-5 h-5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
-                        </div>
-
-                        <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-zinc-50/30 hide-scroll">
-                            <div class="text-center">
-                                <span class="text-[10px] bg-zinc-200/50 text-zinc-500 px-3 py-1 rounded-full">연락처를 교환한 첫날 밤</span>
-                            </div>
-                            <div class="flex gap-2 items-end chat-bubble" style="animation-delay: 0.2s;">
-                                <img src="https://imgur.com/v7RMnz3.png" class="w-8 h-8 rounded-full object-cover shadow-sm shrink-0">
-                                <div class="bg-white border border-zinc-200 text-zinc-700 text-sm px-4 py-2 rounded-2xl rounded-bl-none shadow-sm max-w-[75%]">
-                                    유우 말이야. 고양이 같아. 본인도 그런 자각 있어? 츤데레 고양이.
-                                </div>
-                            </div>
-                            <div class="flex gap-2 items-end justify-end chat-bubble" style="animation-delay: 1.2s;">
-                                <div class="bg-yeonji text-white text-sm px-4 py-2 rounded-2xl rounded-br-none shadow-sm max-w-[75%]">고양이는 좋아하지만 고양이는 아냐. 그리고 츤데레라고 하는 놈 대체로 지뢰야. 너는 무슨 타입?</div>
-                                <img src="https://imgur.com/7AWbHNf.png" class="w-8 h-8 rounded-full object-cover shadow-sm shrink-0">
-                            </div>
-                            <div class="flex gap-2 items-end chat-bubble" style="animation-delay: 2.2s;">
-                                <img src="https://imgur.com/v7RMnz3.png" class="w-8 h-8 rounded-full object-cover shadow-sm shrink-0">
-                                <div class="bg-white border border-zinc-200 text-zinc-700 text-sm px-4 py-2 rounded-2xl rounded-bl-none shadow-sm max-w-[75%]">
-                                    나는 무슨 타입 같은데? 스스로 판단하기 어려워.
-                                </div>
-                            </div>
-                            <div class="flex gap-2 items-end justify-end chat-bubble" style="animation-delay: 3.2s;">
-                                <div class="flex flex-col gap-1 items-end max-w-[75%]">
-                                    <div class="bg-yeonji text-white text-sm px-4 py-2 rounded-2xl rounded-br-none shadow-sm">태풍. 예보 없이 와서 전부 엉망으로 만드는 타입.</div>
-                                    <div class="bg-yeonji text-white text-sm px-4 py-2 rounded-2xl rounded-br-none shadow-sm">……칭찬이야. 아마.</div>
-                                </div>
-                                <img src="https://imgur.com/7AWbHNf.png" class="w-8 h-8 rounded-full object-cover shadow-sm shrink-0">
-                            </div>
-                            <div class="flex gap-2 items-end chat-bubble" style="animation-delay: 4.5s;">
-                                <img src="https://imgur.com/v7RMnz3.png" class="w-8 h-8 rounded-full object-cover shadow-sm shrink-0">
-                                <div class="bg-dahee/10 border border-dahee/20 text-zinc-700 font-medium text-sm px-4 py-2 rounded-2xl rounded-bl-none shadow-sm max-w-[75%]">
-                                    마지막 한 마디가 아니었으면 그렇구나, 했을텐데... 마지막에 보낸 메시지 때문에 '귀엽다' 고 생각해 버렸어. 
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="bg-white border-t border-zinc-200 p-3 flex items-center gap-2">
-                            <div class="w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-400">+</div>
-                            <div class="flex-1 bg-zinc-100 rounded-full h-9 px-4 flex items-center text-xs text-zinc-400">메시지 입력...</div>
-                            <div class="w-8 h-8 rounded-full bg-yeonji flex items-center justify-center text-white shadow-sm">
-                                <svg class="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+        <div id="menu-panel" class="absolute inset-0 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-all duration-[1.2s] z-20">
+            <div class="text-center mb-16 drop-shadow-2xl translate-y-4 transition-transform duration-[1.2s] ease-out" id="menu-title">
+                <span class="text-[10px] font-medium tracking-[0.6em] text-white/70 block mb-4 uppercase">君という猶予</span>
+                <h1 class="text-5xl md:text-6xl font-light text-white tracking-tight">너라는 유예</h1>
             </div>
-        </section>
-
-        <!-- 서사 및 관계의 흐름 섹션 -->
-        <section id="story" class="max-w-5xl mx-auto px-6 py-24 border-t border-zinc-200/60 relative flex">
-            <div class="hidden md:flex flex-col items-center w-24 mr-8 sticky top-32 h-[75vh]">
-                <span class="text-[10px] font-bold text-zinc-400 tracking-widest mb-2 uppercase">Connection</span>
-                <div class="relative w-3 flex-1 bg-zinc-200 rounded-full overflow-hidden">
-                    <div id="trust-bar" class="absolute bottom-0 w-full bg-gradient-to-t from-yeonji to-dahee rounded-full transition-all duration-300" style="height: 0%;"></div>
-                </div>
-                <span id="trust-text" class="text-xs font-bold text-zinc-600 mt-3 text-center transition-all">0%</span>
+            <div class="flex items-center gap-12 md:gap-20 translate-y-4 transition-transform duration-[1.2s] ease-out delay-100" id="menu-links">
+                <button onclick="goToPage('archive')" class="nav-link text-sm md:text-base font-light tracking-[0.3em] text-white/90 hover:text-white transition-colors outline-none">
+                    A R C H I V E
+                </button>
+                <div class="w-px h-8 bg-white/20"></div>
+                <button onclick="goToPage('narrative')" class="nav-link text-sm md:text-base font-light tracking-[0.3em] text-white/90 hover:text-white transition-colors outline-none">
+                    N A R R A T I V E
+                </button>
             </div>
-
-            <div class="flex-1">
-                <div class="text-center mb-16">
-                    <h3 class="text-3xl font-black text-zinc-800 mb-4">흐르는 시간 속의 기록</h3>
-                    <p class="text-zinc-500 font-light">거짓된 무대 위에서 내려와, 서로의 삶을 영원한 닻으로 삼기까지</p>
-                </div>
-                
-                <div class="relative border-l-2 border-zinc-200 ml-4 md:ml-0 space-y-20 pb-10">
-                    
-                    <!-- Phase 01 -->
-                    <div class="story-phase relative pl-8 md:pl-12" data-progress="15">
-                        <div class="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-zinc-300 border-4 border-paper"></div>
-                        <span class="text-xs font-bold text-zinc-400 tracking-widest uppercase block mb-1">Phase 01. 조우</span>
-                        <h4 class="text-xl font-bold text-zinc-800 mb-3">5층 옥상 난간의 실루엣과 셔터음</h4>
-                        <p class="text-zinc-600 text-sm leading-relaxed mb-4">
-                            라이브가 끝난 밤 10시, 텅 빈 마음으로 이케부쿠로 라이브하우스 5층 옥상 난간에 다리를 늘어뜨리고 담배를 피우던 유우. 골목 아래에서 그 위태로운 실루엣을 카메라에 담은 사요는 도망치기는커녕 손을 흔든다. 사진을 지우라며 내려온 유우의 손에 제 턱을 얹는 엉뚱함과, <strong class="text-zinc-800">"파괴의 찰나를 가둬 완전한 상실을 막는다"</strong>는 깊고 투명한 시선. 요즘엔 무서운 게 없다는 그녀의 말에 묘한 끌림을 느낀 유우는, <strong class="text-zinc-800">"너 아니었으면 안 물어봤어"</strong>라는 무심한 핑계를 대며 먼저 연락처를 내민다.
-                        </p>
-                    </div>
-
-                    <!-- Phase 02 -->
-                    <div class="story-phase relative pl-8 md:pl-12" data-progress="30">
-                        <div class="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-zinc-400 border-4 border-paper"></div>
-                        <span class="text-xs font-bold text-zinc-500 tracking-widest uppercase block mb-1">Phase 02. 교감</span>
-                        <h4 class="text-xl font-bold text-zinc-800 mb-3">모래 위에 나란히 적은 이름과 충동적인 약속</h4>
-                        <p class="text-zinc-600 text-sm leading-relaxed mb-4">
-                            다음 날 새벽 5시, 사요의 서툰 차를 타고 도착한 와다우라 해수욕장. 운전 중 호흡이 가빠져 갓길에 차를 세운 사요에게 대신 약을 찾아준 유우는, 자고 싶지 않다는 그녀의 곁에서 조용히 허밍을 들려준다. 바다에 도착한 후, 사요가 모래사장에 <strong class="text-zinc-800">'ゆう'</strong>를 쓰자 유우는 홀린 듯 그 옆에 <strong class="text-zinc-800">'さよ'</strong>를 나란히 적어 넣는다. <strong class="text-zinc-800">"안 지워지면 좋겠는데."</strong> 붉어진 얼굴로 중얼거리는 유우에게, 사요는 그 이름을 카메라에 담으며 <strong class="text-zinc-800">"지워지지 않아"</strong>라고 다정하게 대답한다. 만난 지 하루 만에 서로에게 맹목적으로 빠져든 두 사람은, 갯내음 속에서 충동적이고도 간절한 동거를 약속한다.
-                        </p>
-                    </div>
-
-                    <!-- Phase 03 -->
-                    <div class="story-phase relative pl-8 md:pl-12" data-progress="50">
-                        <div class="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-yeonji border-4 border-paper shadow-[0_0_15px_rgba(82,82,91,0.5)]"></div>
-                        <span class="text-xs font-bold text-yeonji tracking-widest uppercase block mb-1">Phase 03. 일상</span>
-                        <h4 class="text-xl font-bold text-zinc-800 mb-3">일주일의 기다림, 그리고 무대 위 '거짓말쟁이'의 고백</h4>
-                        <p class="text-zinc-600 text-sm leading-relaxed mb-4">
-                            멤버 사쿠의 도움을 받아 박스 세 개와 이불 한 채뿐인 단출한 짐을 들고 사요의 집으로 이사를 마친 날. 유우는 불안스레 손톱을 물어뜯으며 자신이 단순한 프리터가 아닌 맨즈 지하돌 '앨리스 해프닝'의 '아리스'임을 고백한다. 화면 속 무대 위의 자신을 <strong class="text-zinc-800">"텅 빈 거짓말쟁이"</strong>라 자조하는 유우에게, 사요는 <strong class="text-zinc-800">"난 그 거짓말쟁이도 응원할래"</strong>라며 그의 허상마저 온전히 끌어안는다. 그 다정함에 구원받은 유우는, 춤을 보여달라는 사요의 조심스러운 부탁에 부끄러워하면서도 오직 그녀 한 사람을 위해 거실에서 안무를 선보인다. 자신의 춤을 본 사요의 칭찬에 벅차오른 유우는 그녀의 무릎에 얼굴을 묻은 채 다음 라이브의 '특등석'을 약속한다.
-                        </p>
-                    </div>
-
-                    <!-- Phase 04 -->
-                    <div class="story-phase relative pl-8 md:pl-12" data-progress="70">
-                        <div class="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-zinc-600 border-4 border-paper"></div>
-                        <span class="text-xs font-bold text-zinc-600 tracking-widest uppercase block mb-1">Phase 04. 무대</span>
-                        <h4 class="text-xl font-bold text-zinc-800 mb-3">수백 개의 펜라이트 너머, 오직 한 사람을 향한 손짓</h4>
-                        <p class="text-zinc-600 text-sm leading-relaxed mb-4">
-                            라이브 당일, 2층 발코니 초대석. 무대 중앙의 '아리스'는 수많은 펜라이트의 물결을 갈라내고 오직 사요만을 찾아내 손을 뻗는다. 렌즈가 아닌 맨눈으로 시선을 얽으며 건넨 무음의 속삭임. <strong class="text-zinc-800">"보고 있어, 사요."</strong> 하지만 거대한 앰프의 저음이 사요의 얇아진 심장벽을 폭력적으로 짓누르고, 그녀는 복도로 도망쳐 창백하게 주저앉는다. 공연 직후 답장이 없자 사색이 된 채 기계적으로 체키회를 버텨낸 유우는, 뒤늦은 답장에 무대 의상도 벗지 못한 채 비상계단을 뛰어내려간다. 마침내 웅크린 그녀를 찾아낸 유우는, 일 때문이었다는 그녀의 서툰 거짓말을 필사적으로 믿으려 애쓰며 집에 가자고 절박하게 매달린다.
-                        </p>
-                    </div>
-
-                    <!-- Phase 05 -->
-                    <div class="story-phase relative pl-8 md:pl-12" data-progress="85">
-                        <div class="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-dahee border-4 border-paper shadow-[0_0_15px_rgba(161,161,170,0.5)]"></div>
-                        <span class="text-xs font-bold text-dahee tracking-widest uppercase block mb-1">Phase 05. 진실</span>
-                        <h4 class="text-xl font-bold text-zinc-800 mb-3">종이 한 장에 적힌 '예후 불량'과 혼자 삼킨 오열</h4>
-                        <p class="text-zinc-600 text-sm leading-relaxed mb-4">
-                            사요가 업무 일정으로 외출한 사이, 불안감에 숨겨둔 담배를 피우며 집을 정리하던 유우는 그녀의 외투 주머니에서 <strong class="text-zinc-800">'난병 지정 임상조사개인표'</strong>를 발견한다. 병명은 <strong class="text-zinc-800">확장성 심근병증</strong>, 그리고 적혀 있는 <strong class="text-zinc-800">'예후 불량'</strong>. 그동안 그녀가 웃으며 숨겨온 고통과 시한부의 삶을 마주한 유우는 욕실 바닥에 주저앉아 <strong class="text-zinc-800">"왜 혼자 끌어안고 있었어, 거짓말쟁이..."</strong>라며 뼈를 깎는 오열을 토해낸다.
-                        </p>
-                    </div>
-
-                    <!-- Phase 06 -->
-                    <div class="story-phase relative pl-8 md:pl-12" data-progress="100">
-                        <div class="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-gradient-to-r from-yeonji to-dahee border-4 border-paper"></div>
-                        <span class="text-xs font-bold text-zinc-700 tracking-widest uppercase block mb-1">Phase 06. 영원</span>
-                        <h4 class="text-xl font-bold text-zinc-800 mb-3">"내 심장이, 유우와 이어지는 것만 같아."</h4>
-                        <p class="text-zinc-600 text-sm leading-relaxed mb-4">
-                            음식을 사 들고 돌아온 사요 앞에서 평소처럼 웃으려 애쓰던 유우는, 결국 그녀의 다정한 걱정 앞에 무너져 진단서를 보았음을 고백한다. <strong class="text-zinc-800">"내 탓이야, 내가 불안하게 하지 말라고 해서 혼자 참은 거지..."</strong> 자책하며 우는 유우에게 사요는 <strong class="text-zinc-800">"누구의 탓도 아니야. 금방 두고 가지 않아"</strong>라며 다독인다. 서로의 심장 위에 손을 얹고 고동을 확인한 두 사람은, 남은 시간이 얼마든 끝까지 함께할 것을 맹세하며 눈물 섞인 깊고 간절한 입맞춤을 나눈다.
-                        </p>
-                    </div>
-
-                </div>
+            <div class="absolute bottom-12 left-1/2 -translate-x-1/2 opacity-0 transition-opacity duration-1000 delay-500" id="menu-caption">
+                <p class="text-[10px] text-white/40 font-light tracking-widest">파괴의 찰나를 가둬 완전한 상실을 막는다.</p>
             </div>
-        </section>
-
-        <!-- 앨범(갤러리) 섹션 -->
-        <section id="gallery" class="max-w-5xl mx-auto px-6 py-24 border-t border-zinc-200/60">
-            <div class="text-center mb-16">
-                <span class="text-xs font-bold text-yeonji tracking-widest uppercase block mb-2">Moments in Memories</span>
-                <h3 class="text-3xl font-black text-zinc-800 mb-4">기억의 조각들</h3>
-                <p class="text-zinc-500 font-light">프레임 속에 가둬둔, 지워지지 않을 순간들</p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-start">
-                
-                <!-- 갤러리 카드: 상시 그라데이션 및 텍스트 적용 -->
-                <div class="relative group rounded-[2.5rem] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 aspect-[4/5] bg-zinc-200 border border-zinc-200/50">
-                    <img src="https://imgur.com/pUDrWTO.png" alt="Moment 1" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                    <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/95 via-zinc-900/40 to-transparent pointer-events-none"></div>
-                    <div class="absolute bottom-0 left-0 w-full p-8 text-white flex flex-col justify-end pointer-events-none">
-                        <span class="text-zinc-400 text-xs font-bold tracking-widest uppercase mb-1">#뒷골목의_조우</span>
-                        <h4 class="text-2xl font-bold mb-2 tracking-tight">파괴의 찰나</h4>
-                        <p class="text-zinc-200 text-sm font-light leading-relaxed">
-                            "사진, 지워주지 않을래? 나 찍은 거."<br>
-                            그 어두운 골목에서 셔터음과 함께 모든 것이 시작되었다.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="relative group rounded-[2.5rem] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 aspect-[4/5] bg-zinc-200 border border-zinc-200/50 md:mt-12">
-                    <img src="https://imgur.com/YULm0M1.png" alt="Moment 2" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                    <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/95 via-zinc-900/40 to-transparent pointer-events-none"></div>
-                    <div class="absolute bottom-0 left-0 w-full p-8 text-white flex flex-col justify-end pointer-events-none">
-                        <span class="text-zinc-400 text-xs font-bold tracking-widest uppercase mb-1">#새벽_바다</span>
-                        <h4 class="text-2xl font-bold mb-2 tracking-tight">모래 위의 이름</h4>
-                        <p class="text-zinc-200 text-sm font-light leading-relaxed">
-                            "안 지워지면 좋겠는데."<br>
-                            모래 위에 나란히 적힌 두 사람의 이름.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="relative group rounded-[2.5rem] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 aspect-[4/5] bg-zinc-200 border border-zinc-200/50">
-                    <img src="https://imgur.com/xOxCLgC.png" alt="Moment 3" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                    <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/95 via-zinc-900/40 to-transparent pointer-events-none"></div>
-                    <div class="absolute bottom-0 left-0 w-full p-8 text-white flex flex-col justify-end pointer-events-none">
-                        <span class="text-zinc-400 text-xs font-bold tracking-widest uppercase mb-1">#라이브하우스_초대석</span>
-                        <h4 class="text-2xl font-bold mb-2 tracking-tight">오직 너를 위한 무대</h4>
-                        <p class="text-zinc-200 text-sm font-light leading-relaxed">
-                            수백 명의 환호 속에서도, 아리스의 시선이 머무는 곳은 오직 2층 발코니의 사요뿐이었다.
-                        </p>
-                    </div>
-                </div>
-
-                <div class="relative group rounded-[2.5rem] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 aspect-[4/5] bg-zinc-200 border border-zinc-200/50 md:mt-12">
-                    <img src="https://imgur.com/taTUcRM.png" alt="Moment 4" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                    <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/95 via-zinc-900/40 to-transparent pointer-events-none"></div>
-                    <div class="absolute bottom-0 left-0 w-full p-8 text-white flex flex-col justify-end pointer-events-none">
-                        <span class="text-zinc-400 text-xs font-bold tracking-widest uppercase mb-1">#거실의_고백</span>
-                        <h4 class="text-2xl font-bold mb-2 tracking-tight">무너진 세계</h4>
-                        <p class="text-zinc-200 text-sm font-light leading-relaxed">
-                            "...내 심장이, 유우와 이어지는 것만 같아."<br>
-                            "나의 것도, 사요를 위해 뛰고 있어. ...그러니까, 같은거네."
-                        </p>
-                    </div>
-                </div>
-
-            </div>
-        </section>
-
+        </div>
     </div>
 
-    <!-- 떠 있는 BGM 재생/정지 버튼 -->
-    <button id="bgmBtn" class="fixed bottom-10 right-6 md:right-10 bg-white/80 backdrop-blur-md border border-zinc-200 text-zinc-400 w-14 h-14 rounded-full flex items-center justify-center shadow-lg z-50 hover:scale-110 hover:text-zinc-600 transition-all duration-300 group">
-        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M11.536 14.01A8.47 8.47 0 0 0 14.026 8a8.47 8.47 0 0 0-2.49-6.01l-.708.707A7.48 7.48 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z"/>
-            <path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.48 5.48 0 0 1 11.025 8a5.48 5.48 0 0 1-1.61 3.89l.706.706z"/>
-            <path d="M8.707 11.182A4.5 4.5 0 0 0 10.025 8a4.5 4.5 0 0 0-1.318-3.182L8 5.525A3.5 3.5 0 0 1 9.025 8 3.5 3.5 0 0 1 8 10.475l.707.707zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06z"/>
-        </svg>
-        <span class="absolute right-16 bg-white/90 text-zinc-600 text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap pointer-events-none tracking-widest font-medium shadow-md border border-zinc-100">BGM ON/OFF</span>
-    </button>
 
-    <!-- Footer -->
-    <footer id="main-footer" class="bg-zinc-200/50 py-10 text-center transition-colors">
-        <p class="text-xs text-zinc-500 font-medium tracking-widest uppercase">&copy; センチメンタルな恋</p>
-    </footer>
+    <!-- ==========================================
+         [페이지 1] 아카이브(프로필) 페이지 원본 완벽 보존
+    =========================================== -->
+    <div id="page-archive" class="hidden fixed inset-0 z-[90] bg-gray-50 text-gray-800 antialiased font-sans overflow-hidden transition-opacity duration-700 opacity-0">
+        
+        <!-- 홈으로 돌아가기 버튼 -->
+        <button onclick="goToPage('landing')" class="absolute top-8 left-8 z-[100] text-gray-400 hover:text-char1 transition-colors flex items-center gap-2 text-xs font-bold tracking-widest uppercase group">
+            <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            MAIN HOME
+        </button>
 
-    <!-- 스크립트 -->
+        <!-- 아카이브 메인 뷰 -->
+        <div id="view-main" class="view-section absolute inset-0 flex flex-col items-center justify-center transition-all duration-700 opacity-100 z-10 bg-gray-50">
+            <div class="text-center mb-12">
+                <span class="text-xs font-bold tracking-[0.4em] text-gray-400 block mb-3 uppercase">Pair Archive</span>
+                <h1 class="text-5xl font-light text-gray-800 tracking-tight">君という猶予</h1>
+                <p class="mt-4 text-sm text-gray-500 font-light tracking-widest">너라는 유예</p>
+            </div>
+            <div class="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16 relative w-full max-w-6xl px-6">
+                <div onclick="switchArchiveView('view-char1')" class="group relative w-full md:w-[380px] h-[540px] rounded-3xl overflow-hidden cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-gray-200">
+                    <img src="https://imgur.com/yThETlE.png" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-char1/95 via-char1/40 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="absolute bottom-0 left-0 w-full p-8 text-white transform transition-transform duration-500">
+                        <span class="px-3 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-[11px] font-bold tracking-widest text-white mb-4 inline-block">지하 아이돌</span>
+                        <h2 class="text-4xl font-bold mb-3">시노노메 유우</h2>
+                        <p class="text-sm font-light text-gray-200 line-clamp-2 leading-relaxed">화려한 조명 아래서 텅 빈 미소를 지어내는 도쿄의 인기 지하 아이돌.</p>
+                    </div>
+                </div>
+                <div onclick="switchArchiveView('view-char2')" class="group relative w-full md:w-[380px] h-[540px] rounded-3xl overflow-hidden cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-gray-200">
+                    <img src="https://imgur.com/HToL5G9.png" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t from-char1/95 via-char1/40 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    <div class="absolute bottom-0 left-0 w-full p-8 text-white transform transition-transform duration-500">
+                        <span class="px-3 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-[11px] font-bold tracking-widest text-white mb-4 inline-block">프리랜서 사진가</span>
+                        <h2 class="text-4xl font-bold mb-3">아야세 사요</h2>
+                        <p class="text-sm font-light text-gray-200 line-clamp-2 leading-relaxed">언제 멈출지 모르는 고장 난 심장을 품고 세상의 부서지는 찰나를 기록하는 사진가.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 유우 프로필 뷰 -->
+        <div id="view-char1" class="view-section hidden absolute inset-0 flex-col md:flex-row opacity-0 transition-opacity duration-700 z-0 bg-white">
+            <div class="w-full md:w-[45vw] h-[40vh] md:h-screen relative shrink-0">
+                <img src="https://imgur.com/6uMU3KY.png" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-char1/90 via-char1/20 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 w-full p-10 md:p-16 text-white">
+                    <span class="px-3 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold tracking-widest mb-4 inline-block">지하 아이돌</span>
+                    <h2 class="text-5xl md:text-6xl font-bold mb-2 tracking-tight">시노노메 유우</h2>
+                    <p class="text-lg md:text-xl font-light text-gray-300">Shinonome Yuu</p>
+                </div>
+            </div>
+            <div class="w-full md:w-[55vw] h-[60vh] md:h-screen overflow-y-auto custom-scroll relative bg-white px-8 py-10 md:px-20 md:py-16">
+                <button onclick="switchArchiveView('view-main')" class="mb-12 flex items-center justify-center w-11 h-11 bg-gray-50 text-gray-400 hover:text-char1 hover:bg-char1/5 rounded-full transition-all duration-300 hover:-translate-x-1 shadow-sm border border-gray-100">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                </button>
+                <div class="border-l-4 border-char1 pl-6 mb-16">
+                    <p class="text-2xl font-light text-gray-800 leading-relaxed">"お前がいる間は、ずっと隣にいる。<br>怖くても、痛くても、いい。"</p>
+                    <p class="mt-3 text-sm text-gray-400 font-light">네가 있는 동안은, 계속 옆에 있을게. 무서워도, 아파도, 괜찮아.</p>
+                </div>
+                <div class="space-y-16">
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-400 tracking-widest uppercase mb-6">Profile</h3>
+                        <div class="grid grid-cols-2 gap-y-6 gap-x-10 text-sm">
+                            <div class="border-b border-gray-200 pb-3"><span class="text-gray-400 font-bold block mb-1">나이</span><span class="text-gray-800 font-medium text-base">20세</span></div>
+                            <div class="border-b border-gray-200 pb-3"><span class="text-gray-400 font-bold block mb-1">신장</span><span class="text-gray-800 font-medium text-base">174cm</span></div>
+                            <div class="border-b border-gray-200 pb-3"><span class="text-gray-400 font-bold block mb-1">생일</span><span class="text-gray-800 font-medium text-base">7월 7일</span></div>
+                            <div class="border-b border-gray-200 pb-3"><span class="text-gray-400 font-bold block mb-1">직업</span><span class="text-gray-800 font-medium text-base">지하 아이돌 (아리스)</span></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-400 tracking-widest uppercase mb-6">Theme Track</h3>
+                        <div id="player-char1" class="music-player flex items-center gap-4 bg-gray-50 p-2 pr-6 rounded-full border border-gray-200 w-max max-w-full cursor-pointer hover:bg-gray-100 transition-colors shadow-sm" onclick="toggleAudio('char1')">
+                            <div class="w-12 h-12 rounded-full overflow-hidden shrink-0"><img src="https://imgur.com/RyDsjWu.png" class="w-full h-full object-cover"></div>
+                            <div class="flex flex-col mr-2"><span class="text-sm font-bold text-gray-800">ずうっといっしょ！</span><span class="text-xs text-gray-500">キタニタツヤ</span></div>
+                            <div class="text-char1">
+                                <svg class="w-6 h-6 play-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+                                <svg class="w-6 h-6 pause-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                            </div>
+                            <div class="flex items-end gap-1 h-4 ml-2">
+                                <div class="w-1 h-1 bg-char1/60 rounded-full eq-bar"></div><div class="w-1 h-1 bg-char1/80 rounded-full eq-bar"></div>
+                                <div class="w-1 h-1 bg-char1/60 rounded-full eq-bar"></div><div class="w-1 h-1 bg-char1/40 rounded-full eq-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-400 tracking-widest uppercase mb-6">Preferences</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                                <span class="text-xs font-bold text-char1 uppercase mb-4 block">Likes</span>
+                                <ul class="text-sm text-gray-600 space-y-3">
+                                    <li>• 아이스 아메리카노(휘핑 듬뿍), 나폴리탄</li>
+                                    <li>• 소설 &lt;뱀에게 피어싱&gt;</li>
+                                    <li>• 사요의 체온</li>
+                                </ul>
+                            </div>
+                            <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                                <span class="text-xs font-bold text-gray-400 uppercase mb-4 block">Dislikes</span>
+                                <ul class="text-sm text-gray-600 space-y-3">
+                                    <li>• 바람, 외도, 사요의 오시헨</li>
+                                    <li>• 공포물, 바퀴벌레 (경악함)</li>
+                                    <li>• 남성팬 (과거 트라우마 추정)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-400 tracking-widest uppercase mb-6">T.M.I</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-gray-50 p-5 rounded-2xl border border-gray-200">
+                                <span class="text-xs font-bold text-char1 block mb-2">🍶 주량</span>
+                                <p class="text-sm text-gray-600">소주 2병으로 평균 이상은 마신다.</p>
+                            </div>
+                            <div class="bg-gray-50 p-5 rounded-2xl border border-gray-200">
+                                <span class="text-xs font-bold text-char1 block mb-2">📷 사진</span>
+                                <p class="text-sm text-gray-600">어린 시절 사진을 하나도 안 갖고 있다.</p>
+                            </div>
+                            <div class="bg-gray-50 p-5 rounded-2xl border border-gray-200">
+                                <span class="text-xs font-bold text-char1 block mb-2">🎓 꿈</span>
+                                <p class="text-sm text-gray-600">대학교에 가보는 것.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-400 tracking-widest uppercase mb-6">Detail</h3>
+                        <p class="text-gray-600 text-base leading-relaxed mb-6">방임 가정에서 자란 영향인지 자존감이 낮고, 본인의 이름조차 별로 좋아하지 않는다. 평소에는 어둡고 퇴폐적인 분위기의 서브컬처 스트리트 룩을 즐겨 입으며, 오버핏 옷 아래 팔목의 흔적과 텅 빈 눈을 감춘다.<br><br>맨즈 지하돌 그룹 '앨리스 해프닝'의 인기 1위 '아리스'. 무대 위에서는 금발 벽안의 왕자님으로 팬들에게 상냥한 미소를 아낌없이 뿌리지만, 화장을 지운 뒤 마주하는 건 긴 앞머리 아래 피곤한 눈의 자신뿐이다. 이백 명의 환호도, 코어팬들의 열렬한 편지도, 정작 조명이 꺼진 방으로 돌아오면 아무것도 채워주지 못한다. 담배와 약(오버도즈)에 손을 뻗는 밤이 늘어가고, 그 공허를 채워줄 단 하나의 시선을 늘 갈망한다.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-4 py-2 bg-char1/5 text-char1 rounded-full text-xs font-bold">#지하돌</span>
+                            <span class="px-4 py-2 bg-char1/5 text-char1 rounded-full text-xs font-bold">#멘헤라</span>
+                            <span class="px-4 py-2 bg-char1/5 text-char1 rounded-full text-xs font-bold">#개인척하는늑대</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-24 pt-10 border-t border-gray-200 pb-20">
+                    <button onclick="toggleComment('comment-char1', 'icon-char1')" class="w-full flex items-center justify-between text-left group">
+                        <span class="text-sm font-bold text-gray-400 tracking-widest uppercase group-hover:text-char1 transition-colors">Partner's Comment</span>
+                        <svg id="icon-char1" class="w-6 h-6 text-gray-300 group-hover:text-char1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="comment-char1" class="expand-content">
+                        <div class="expand-inner">
+                            <div class="mt-6 bg-gray-50 rounded-2xl p-8 border-l-4 border-char2 shadow-sm">
+                                <p class="text-gray-700 text-base font-medium leading-relaxed italic">"내 렌즈가, 어느새 유우의 내일을 담고 싶어 하고 있어. 나를 살고 싶게 만들어버린, 나의 유일한 거짓말쟁이."</p>
+                                <span class="block mt-4 text-xs text-char2 font-bold tracking-widest uppercase">- 사요</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 사요 프로필 뷰 -->
+        <div id="view-char2" class="view-section hidden absolute inset-0 flex-col md:flex-row-reverse opacity-0 transition-opacity duration-700 z-0 bg-white">
+            <div class="w-full md:w-[45vw] h-[40vh] md:h-screen relative shrink-0">
+                <img src="https://imgur.com/bQeewfe.png" class="absolute inset-0 w-full h-full object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-char1/90 via-char1/20 to-transparent"></div>
+                <div class="absolute bottom-0 left-0 md:left-auto md:right-0 w-full p-10 md:p-16 text-white md:text-right">
+                    <span class="px-3 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold tracking-widest mb-4 inline-block">프리랜서 사진가</span>
+                    <h2 class="text-5xl md:text-6xl font-bold mb-2 tracking-tight">아야세 사요</h2>
+                    <p class="text-lg md:text-xl font-light text-gray-300">Ayase Sayo</p>
+                </div>
+            </div>
+            <div class="w-full md:w-[55vw] h-[60vh] md:h-screen overflow-y-auto custom-scroll relative bg-white px-8 py-10 md:px-20 md:py-16">
+                <button onclick="switchArchiveView('view-main')" class="mb-12 flex items-center justify-center w-11 h-11 bg-gray-50 text-gray-400 hover:text-char2 hover:bg-char2/5 rounded-full transition-all duration-300 hover:-translate-x-1 shadow-sm border border-gray-100">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                </button>
+                <div class="border-l-4 border-char2 pl-6 mb-16">
+                    <p class="text-2xl font-light text-gray-800 leading-relaxed">"心臓の鼓動が一つに重なってからも、その最期を尽くすまで。<br>私も、悠のそばにいるよ。"</p>
+                    <p class="mt-3 text-sm text-gray-400 font-light">심장박동이 하나로 포개어지고 나서도, 그 마지막을 다할 때까지. 나도, 유우의 곁에 있을게.</p>
+                </div>
+                <div class="space-y-16">
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-400 tracking-widest uppercase mb-6">Profile</h3>
+                        <div class="grid grid-cols-2 gap-y-6 gap-x-10 text-sm">
+                            <div class="border-b border-gray-200 pb-3"><span class="text-gray-400 font-bold block mb-1">나이</span><span class="text-gray-800 font-medium text-base">20세</span></div>
+                            <div class="border-b border-gray-200 pb-3"><span class="text-gray-400 font-bold block mb-1">신장</span><span class="text-gray-800 font-medium text-base">154cm</span></div>
+                            <div class="border-b border-gray-200 pb-3"><span class="text-gray-400 font-bold block mb-1">생일</span><span class="text-gray-800 font-medium text-base">12월 31일</span></div>
+                            <div class="border-b border-gray-200 pb-3"><span class="text-gray-400 font-bold block mb-1">직업</span><span class="text-gray-800 font-medium text-base">프리랜서 사진가</span></div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-400 tracking-widest uppercase mb-6">Theme Track</h3>
+                        <div id="player-char2" class="music-player flex items-center gap-4 bg-gray-50 p-2 pr-6 rounded-full border border-gray-200 w-max max-w-full cursor-pointer hover:bg-gray-100 transition-colors shadow-sm" onclick="toggleAudio('char2')">
+                            <div class="w-12 h-12 rounded-full overflow-hidden shrink-0"><img src="https://imgur.com/1lLrcks.png" class="w-full h-full object-cover"></div>
+                            <div class="flex flex-col mr-2"><span class="text-sm font-bold text-gray-800">あなたのことをおしえて</span><span class="text-xs text-gray-500">キタニタツヤ</span></div>
+                            <div class="text-char2">
+                                <svg class="w-6 h-6 play-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"></path></svg>
+                                <svg class="w-6 h-6 pause-icon" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zM7 8a1 1 0 012 0v4a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v4a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path></svg>
+                            </div>
+                            <div class="flex items-end gap-1 h-4 ml-2">
+                                <div class="w-1 h-1 bg-char2/60 rounded-full eq-bar"></div><div class="w-1 h-1 bg-char2/80 rounded-full eq-bar"></div>
+                                <div class="w-1 h-1 bg-char2/60 rounded-full eq-bar"></div><div class="w-1 h-1 bg-char2/40 rounded-full eq-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-400 tracking-widest uppercase mb-6">Preferences</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                                <span class="text-xs font-bold text-char2 uppercase mb-4 block">Likes</span>
+                                <ul class="text-sm text-gray-600 space-y-3">
+                                    <li>• 카메라로 사진 찍기</li>
+                                    <li>• 새벽의 바다</li>
+                                    <li>• 유우의 냄새와 목소리</li>
+                                </ul>
+                            </div>
+                            <div class="bg-gray-50 p-6 rounded-2xl border border-gray-100">
+                                <span class="text-xs font-bold text-gray-400 uppercase mb-4 block">Dislikes</span>
+                                <ul class="text-sm text-gray-600 space-y-3">
+                                    <li>• 아무 말 없는 어색한 침묵</li>
+                                    <li>• 병원, 약 먹기</li>
+                                    <li>• 심장이 멈춰버리는 날</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-400 tracking-widest uppercase mb-6">T.M.I</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div class="bg-gray-50 p-5 rounded-2xl border border-gray-200">
+                                <span class="text-xs font-bold text-char2 block mb-2">🚗 초보 운전</span>
+                                <p class="text-sm text-gray-600">면허를 딴 지 한 달이 지났지만, 유우에게는 '하루 됐다'고 천연덕스럽게 뻥을 쳤다.(한 달도 초보 운전이 맞긴 하다.)</p>
+                            </div>
+                            <div class="bg-gray-50 p-5 rounded-2xl border border-gray-200">
+                                <span class="text-xs font-bold text-char2 block mb-2">💰 재력</span>
+                                <p class="text-sm text-gray-600">모아둔 돈이 있다. 사실 일부는 돌아가신 할머니가 남겨 준 유산.</p>
+                            </div>
+                            <div class="bg-gray-50 p-5 rounded-2xl border border-gray-200">
+                                <span class="text-xs font-bold text-char2 block mb-2">📸 사진 철학</span>
+                                <p class="text-sm text-gray-600">사진가는 '파괴의 찰나'를 프레임 안에 가둬 완전한 상실을 막는 작업이라 믿는다.</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-gray-400 tracking-widest uppercase mb-6">Detail</h3>
+                        <p class="text-gray-600 text-base leading-relaxed mb-6">13살 무렵 부모의 이혼과 수동적 방치 속에서 유일한 안식처였던 외할머니의 헌신 덕에, 큰 비뚤어짐 없이 자랐다. 하지만 16살 고등학교 입학 직후, 잦은 숨 가쁨과 현기증 등 심장의 이상 조짐이 뚜렷해지기 시작했다. 이를 눈치챈 할머니는 사요의 통학 거리를 최소한으로 줄이고 주변의 불편한 소문으로부터 벗어나게 해주고자, 학교 근처의 낡은 외가로 이사를 감행했다. 저기압과 습도로 심장의 압박감이 위태롭게 짓누르던 6월의 장마철, 이삿짐을 정리하다 돌아가신 외할아버지의 낡은 필름 카메라를 우연히 손에 쥔 것이 모든 것의 시작이었다.<br><br>무리하지 않으면 평범하게 살 수 있을 거란 희망 고문도 잠시, 18살이 되던 해 병세가 급격히 악화되며 확장성 심근병증 시한부 판정을 받았다. 19살에는 유일한 가족이던 할머니마저 세상을 떠났고, 홀로 남겨져 프리랜서 사진가로 활동하는 스무 살의 사요에게 허락된 여명은 고작 1년 남짓이었다. 그녀에게 사진이란 부서지고 무너지는 것들의 시간을 영원히 멈추는 작업. 산산조각 나서 영영 사라져 버리기 직전, 그 파괴의 찰나를 프레임 안에 가둬 완전한 상실을 막으려는 무의식 중의 순수하고 처절한 발악인 셈이다.</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="px-4 py-2 bg-char2/5 text-char2 rounded-full text-xs font-bold">#시한부사진가</span>
+                            <span class="px-4 py-2 bg-char2/5 text-char2 rounded-full text-xs font-bold">#파괴의찰나</span>
+                            <span class="px-4 py-2 bg-char2/5 text-char2 rounded-full text-xs font-bold">#박동의기록</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-24 pt-10 border-t border-gray-200 pb-20">
+                    <button onclick="toggleComment('comment-char2', 'icon-char2')" class="w-full flex items-center justify-between text-left group">
+                        <span class="text-sm font-bold text-gray-400 tracking-widest uppercase group-hover:text-char2 transition-colors">Partner's Comment</span>
+                        <svg id="icon-char2" class="w-6 h-6 text-gray-300 group-hover:text-char2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="comment-char2" class="expand-content">
+                        <div class="expand-inner">
+                            <div class="mt-6 bg-gray-50 rounded-2xl p-8 border-l-4 border-char1 shadow-sm">
+                                <p class="text-gray-700 text-base font-medium leading-relaxed italic">"'다녀왔어'라고 말할 곳이 생겼어. 그게 사요라서 다행이야. 나는 사요만 있으면 돼. 다른 건 아무것도, 정말 아무것도 필요 없어."</p>
+                                <span class="block mt-4 text-xs text-char1 font-bold tracking-widest uppercase">- 유우</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ==========================================
+         [페이지 2] 서사(Narrative) 페이지 원본 완벽 보존
+    =========================================== -->
+    <!-- 원본 body 클래스를 그대로 이 div에 적용하여 레이아웃 100% 유지 -->
+    <div id="page-narrative" class="hidden absolute top-0 left-0 w-full min-h-screen bg-paper text-zinc-800 antialiased selection:bg-dahee selection:text-white overflow-x-hidden transition-opacity duration-700 opacity-0 z-[90] font-noto">
+        
+        <!-- 홈으로 돌아가기 버튼 -->
+        <button onclick="goToPage('landing')" class="fixed top-8 left-8 z-[100] bg-white/80 backdrop-blur-md border border-zinc-200 text-zinc-500 hover:text-zinc-800 px-4 py-2 rounded-full transition-all shadow-sm flex items-center gap-2 text-xs font-bold tracking-widest uppercase group">
+            <svg class="w-4 h-4 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+            MAIN HOME
+        </button>
+
+        <!-- 떠 있는 BGM 재생/정지 버튼 (원본 그대로) -->
+        <button id="bgmBtn" class="fixed bottom-10 right-6 md:right-10 bg-white/80 backdrop-blur-md border border-zinc-200 text-zinc-400 w-14 h-14 rounded-full flex items-center justify-center shadow-lg z-50 hover:scale-110 hover:text-zinc-600 transition-all duration-300 group">
+            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M11.536 14.01A8.47 8.47 0 0 0 14.026 8a8.47 8.47 0 0 0-2.49-6.01l-.708.707A7.48 7.48 0 0 1 13.025 8c0 2.071-.84 3.946-2.197 5.303l.708.707z"/>
+                <path d="M10.121 12.596A6.48 6.48 0 0 0 12.025 8a6.48 6.48 0 0 0-1.904-4.596l-.707.707A5.48 5.48 0 0 1 11.025 8a5.48 5.48 0 0 1-1.61 3.89l.706.706z"/>
+                <path d="M8.707 11.182A4.5 4.5 0 0 0 10.025 8a4.5 4.5 0 0 0-1.318-3.182L8 5.525A3.5 3.5 0 0 1 9.025 8 3.5 3.5 0 0 1 8 10.475l.707.707zM6.717 3.55A.5.5 0 0 1 7 4v8a.5.5 0 0 1-.812.39L3.825 10.5H1.5A.5.5 0 0 1 1 10V6a.5.5 0 0 1 .5-.5h2.325l2.363-1.89a.5.5 0 0 1 .529-.06z"/>
+            </svg>
+            <span class="absolute right-16 bg-white/90 text-zinc-600 text-xs px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap pointer-events-none tracking-widest font-medium shadow-md border border-zinc-100">BGM ON/OFF</span>
+        </button>
+
+        <div id="normal-content">
+            <!-- Header -->
+            <header class="relative w-full py-20 px-6 flex flex-col items-center justify-center text-center overflow-hidden">
+                <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-white/90 via-transparent to-transparent"></div>
+                <div class="relative z-10 max-w-4xl mx-auto pt-10">
+                    <span class="text-xs md:text-sm font-bold tracking-[0.4em] text-zinc-400 block mb-4 uppercase">너라는 유예</span>
+                    <h1 class="text-4xl md:text-5xl font-black text-zinc-800 mt-2 mb-6 leading-tight tracking-tight">
+                        셔터음이 울린 밤,<br class="hidden md:block"> 
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-yeonji to-dahee">서로의 영원한 닻</span>이 되기까지.
+                    </h1>
+                    <p class="text-lg text-zinc-500 max-w-2xl mx-auto leading-relaxed font-light">
+                        무대 위의 거짓말쟁이 아이돌과, 세상을 렌즈 너머로 보는 시한부 사진가.<br>
+                        서로의 상실을 채우며 평생을 약속한, 한 장의 서사.
+                    </p>
+                </div>
+            </header>
+
+            <!-- Profile Section (원본 그대로 완벽 복구) -->
+            <section id="profile" class="max-w-5xl mx-auto px-6 py-10">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16">
+                    <!-- 유우 프로필 -->
+                    <div class="flex flex-col gap-4">
+                        <div class="relative w-full aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-2xl group border border-zinc-200/50">
+                            <img src="https://imgur.com/7AWbHNf.png" alt="시노노메 유우" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/95 via-zinc-900/40 to-transparent pointer-events-none"></div>
+                            <div class="absolute bottom-0 left-0 w-full p-8 text-white flex flex-col justify-end h-1/2 pointer-events-none">
+                                <div class="flex items-end gap-3 mb-1">
+                                    <h2 class="text-4xl font-bold tracking-tight">시노노메 유우</h2>
+                                    <span class="text-2xl font-light opacity-90">지하돌 '아리스'</span>
+                                </div>
+                                <p class="text-zinc-300 font-medium mb-4 text-sm tracking-wide">#맨즈지하돌 #20세 #멘헤라 #병적순애</p>
+                                <div class="overflow-y-auto hide-scroll max-h-[120px] pr-2 pointer-events-auto">
+                                    <p class="text-sm text-zinc-200 leading-relaxed font-light">
+                                        도쿄에서 활동하는 인기 맨즈 지하돌 '앨리스 해프닝'의 멤버. 무대 위에서는 금발 벽안의 완벽한 왕자님을 연기하지만, 본모습은 피곤에 절어 있는 청년이다. 무대 위의 자신을 거짓말쟁이처럼 느끼며 천천히 부서져가던 중, 옥상에서 사요와 마주치고 단 하루 만에 사랑에 빠져버린다.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="glass-panel rounded-2xl p-5 border-l-4 border-yeonji relative ml-4 mt-2">
+                            <div class="absolute -top-3 left-6 w-6 h-6 glass-panel rotate-45 border-r-0 border-b-0"></div>
+                            <p class="text-zinc-700 text-sm font-medium leading-relaxed z-10 relative">
+                                "영화였다면 여기서 엔드롤인가. 그래도 계속되는 거지. 내일도, 모레도."
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 사요 프로필 -->
+                    <div class="flex flex-col gap-4">
+                        <div class="relative w-full aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-2xl group border border-zinc-200/50">
+                            <img src="https://imgur.com/v7RMnz3.png" alt="아야세 사요" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/95 via-zinc-900/40 to-transparent pointer-events-none"></div>
+                            <div class="absolute bottom-0 left-0 w-full p-8 text-white flex flex-col justify-end h-1/2 pointer-events-none">
+                                <div class="flex items-end gap-3 mb-1">
+                                    <h2 class="text-4xl font-bold tracking-tight">아야세 사요</h2>
+                                    <span class="text-2xl font-light opacity-90">프리랜서 사진가</span>
+                                </div>
+                                <p class="text-zinc-300 font-medium mb-4 text-sm tracking-wide">#시한부 #20세 #투명한시선 #담담한직진</p>
+                                <div class="overflow-y-auto hide-scroll max-h-[120px] pr-2 pointer-events-auto">
+                                    <p class="text-sm text-zinc-200 leading-relaxed font-light">
+                                        스무 살의 프리랜서 사진가. 눈 밑에 점이 있으며 늘 차분하고 담담하다. '확장성 심근병증'이라는 난병을 앓고 있어 언제 심장이 멈출지 모르는 삶을 살고 있다. 유우의 진짜 모습을 꿰뚫어 보고 온전히 받아들이며, 마지막 순간까지 유우와 함께하기로 약속한다.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="glass-panel rounded-2xl p-5 border-l-4 border-dahee relative ml-4 mt-2">
+                            <div class="absolute -top-3 left-6 w-6 h-6 glass-panel rotate-45 border-r-0 border-b-0"></div>
+                            <p class="text-zinc-700 text-sm font-medium leading-relaxed z-10 relative">
+                                "심장박동이 하나로 포개어지고 나서도, 그 마지막을 다할 때까지. 나도, 유우의 곁에 있을게."
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 호칭 & 메신저 섹션 -->
+            <section id="communication" class="max-w-5xl mx-auto px-6 py-20 border-t border-zinc-200/60">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                    <div class="space-y-10">
+                        <div class="space-y-2">
+                            <span class="text-xs font-bold text-zinc-400 tracking-widest uppercase">Relationship Dynamics</span>
+                            <h3 class="text-3xl font-black text-zinc-800">우리가 서로를 부를 때</h3>
+                            <p class="text-sm text-zinc-500 font-light leading-relaxed">그 속에 담긴 온도는 누구보다 확실한 두 사람의 호칭.</p>
+                        </div>
+                        <div class="space-y-6">
+                            <div class="bg-white/60 backdrop-blur-md p-6 rounded-3xl border border-dahee/20 shadow-sm relative overflow-hidden group">
+                                <div class="absolute top-0 left-0 w-1.5 h-full bg-dahee"></div>
+                                <h4 class="text-sm font-bold text-zinc-700 mb-4 flex items-center gap-2">
+                                    <img src="https://imgur.com/v7RMnz3.png" class="w-6 h-6 rounded-full object-cover">
+                                    아야세 사요 <span class="text-zinc-400 mx-1">→</span> 시노노메 유우
+                                </h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-4 py-1.5 bg-white rounded-full text-sm font-medium text-zinc-600 shadow-sm border border-zinc-100 group-hover:-translate-y-1 transition-transform delay-75">"유우"</span>
+                                    <span class="px-4 py-1.5 bg-dahee/10 rounded-full text-sm font-bold text-dahee shadow-sm border border-dahee/20 group-hover:-translate-y-1 transition-transform delay-150">"유우유우"</span>
+                                </div>
+                                <p class="text-xs text-zinc-400 mt-3 font-light ml-1">* 첫 만남 사진을 블루투스로 보내다 설정된 기기 이름 'YuuYuu'를 보고 그대로 부른 호칭.</p>
+                            </div>
+                            <div class="bg-white/60 backdrop-blur-md p-6 rounded-3xl border border-yeonji/20 shadow-sm relative overflow-hidden group">
+                                <div class="absolute top-0 left-0 w-1.5 h-full bg-yeonji"></div>
+                                <h4 class="text-sm font-bold text-zinc-700 mb-4 flex items-center gap-2">
+                                    <img src="https://imgur.com/7AWbHNf.png" class="w-6 h-6 rounded-full object-cover">
+                                    시노노메 유우 <span class="text-zinc-400 mx-1">→</span> 아야세 사요
+                                </h4>
+                                <div class="flex flex-wrap gap-2 items-center">
+                                    <span class="px-4 py-1.5 bg-white rounded-full text-sm font-medium text-zinc-600 shadow-sm border border-zinc-100 group-hover:-translate-y-1 transition-transform">"너"</span>
+                                    <span class="px-4 py-1.5 bg-yeonji/10 rounded-full text-sm font-bold text-yeonji shadow-sm border border-yeonji/30 group-hover:-translate-y-1 transition-transform delay-75 relative">"사요"</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-center lg:justify-end">
+                        <div class="w-full max-w-sm bg-white rounded-[2.5rem] shadow-2xl border-4 border-zinc-100 overflow-hidden flex flex-col h-[500px] relative">
+                            <div class="bg-zinc-50/90 backdrop-blur-md border-b border-zinc-200 p-4 flex items-center gap-3 sticky top-0 z-10">
+                                <div class="w-2 h-2 rounded-full bg-dahee animate-pulse"></div>
+                                <h4 class="font-bold text-zinc-700 text-sm flex-1">사요</h4>
+                                <svg class="w-5 h-5 text-zinc-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"></path></svg>
+                            </div>
+                            <div class="flex-1 overflow-y-auto p-4 space-y-4 bg-zinc-50/30 hide-scroll">
+                                <div class="text-center"><span class="text-[10px] bg-zinc-200/50 text-zinc-500 px-3 py-1 rounded-full">연락처를 교환한 첫날 밤</span></div>
+                                <div class="flex gap-2 items-end chat-bubble" style="animation-delay: 0.2s;">
+                                    <img src="https://imgur.com/v7RMnz3.png" class="w-8 h-8 rounded-full object-cover shadow-sm shrink-0">
+                                    <div class="bg-white border border-zinc-200 text-zinc-700 text-sm px-4 py-2 rounded-2xl rounded-bl-none shadow-sm max-w-[75%]">유우 말이야. 고양이 같아. 본인도 그런 자각 있어? 츤데레 고양이.</div>
+                                </div>
+                                <div class="flex gap-2 items-end justify-end chat-bubble" style="animation-delay: 1.2s;">
+                                    <div class="bg-yeonji text-white text-sm px-4 py-2 rounded-2xl rounded-br-none shadow-sm max-w-[75%]">고양이는 좋아하지만 고양이는 아냐. 그리고 츤데레라고 하는 놈 대체로 지뢰야. 너는 무슨 타입?</div>
+                                    <img src="https://imgur.com/7AWbHNf.png" class="w-8 h-8 rounded-full object-cover shadow-sm shrink-0">
+                                </div>
+                                <div class="flex gap-2 items-end chat-bubble" style="animation-delay: 2.2s;">
+                                    <img src="https://imgur.com/v7RMnz3.png" class="w-8 h-8 rounded-full object-cover shadow-sm shrink-0">
+                                    <div class="bg-white border border-zinc-200 text-zinc-700 text-sm px-4 py-2 rounded-2xl rounded-bl-none shadow-sm max-w-[75%]">나는 무슨 타입 같은데? 스스로 판단하기 어려워.</div>
+                                </div>
+                                <div class="flex gap-2 items-end justify-end chat-bubble" style="animation-delay: 3.2s;">
+                                    <div class="flex flex-col gap-1 items-end max-w-[75%]">
+                                        <div class="bg-yeonji text-white text-sm px-4 py-2 rounded-2xl rounded-br-none shadow-sm">태풍. 예보 없이 와서 전부 엉망으로 만드는 타입.</div>
+                                        <div class="bg-yeonji text-white text-sm px-4 py-2 rounded-2xl rounded-br-none shadow-sm">……칭찬이야. 아마.</div>
+                                    </div>
+                                    <img src="https://imgur.com/7AWbHNf.png" class="w-8 h-8 rounded-full object-cover shadow-sm shrink-0">
+                                </div>
+                                <div class="flex gap-2 items-end chat-bubble" style="animation-delay: 4.5s;">
+                                    <img src="https://imgur.com/v7RMnz3.png" class="w-8 h-8 rounded-full object-cover shadow-sm shrink-0">
+                                    <div class="bg-dahee/10 border border-dahee/20 text-zinc-700 font-medium text-sm px-4 py-2 rounded-2xl rounded-bl-none shadow-sm max-w-[75%]">마지막 한 마디가 아니었으면 그렇구나, 했을텐데... 마지막에 보낸 메시지 때문에 '귀엽다' 고 생각해 버렸어.</div>
+                                </div>
+                            </div>
+                            <div class="bg-white border-t border-zinc-200 p-3 flex items-center gap-2">
+                                <div class="w-8 h-8 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-400">+</div>
+                                <div class="flex-1 bg-zinc-100 rounded-full h-9 px-4 flex items-center text-xs text-zinc-400">메시지 입력...</div>
+                                <div class="w-8 h-8 rounded-full bg-yeonji flex items-center justify-center text-white shadow-sm">
+                                    <svg class="w-4 h-4 ml-0.5" fill="currentColor" viewBox="0 0 20 20"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 서사 및 관계의 흐름 섹션 -->
+            <section id="story" class="max-w-5xl mx-auto px-6 py-24 border-t border-zinc-200/60 relative flex">
+                <div class="hidden md:flex flex-col items-center w-24 mr-8 sticky top-32 h-[75vh]">
+                    <span class="text-[10px] font-bold text-zinc-400 tracking-widest mb-2 uppercase">Connection</span>
+                    <div class="relative w-3 flex-1 bg-zinc-200 rounded-full overflow-hidden">
+                        <div id="trust-bar" class="absolute bottom-0 w-full bg-gradient-to-t from-yeonji to-dahee rounded-full transition-all duration-300" style="height: 0%;"></div>
+                    </div>
+                    <span id="trust-text" class="text-xs font-bold text-zinc-600 mt-3 text-center transition-all">0%</span>
+                </div>
+                <div class="flex-1">
+                    <div class="text-center mb-16">
+                        <h3 class="text-3xl font-black text-zinc-800 mb-4">흐르는 시간 속의 기록</h3>
+                        <p class="text-zinc-500 font-light">거짓된 무대 위에서 내려와, 서로의 삶을 영원한 닻으로 삼기까지</p>
+                    </div>
+                    <div class="relative border-l-2 border-zinc-200 ml-4 md:ml-0 space-y-20 pb-10">
+                        <div class="story-phase relative pl-8 md:pl-12" data-progress="15">
+                            <div class="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-zinc-300 border-4 border-paper"></div>
+                            <span class="text-xs font-bold text-zinc-400 tracking-widest uppercase block mb-1">Phase 01. 조우</span>
+                            <h4 class="text-xl font-bold text-zinc-800 mb-3">5층 옥상 난간의 실루엣과 셔터음</h4>
+                            <p class="text-zinc-600 text-sm leading-relaxed mb-4">라이브가 끝난 밤 10시, 텅 빈 마음으로 이케부쿠로 라이브하우스 5층 옥상 난간에 다리를 늘어뜨리고 담배를 피우던 유우. 골목 아래에서 그 위태로운 실루엣을 카메라에 담은 사요는 도망치기는커녕 손을 흔든다. 사진을 지우라며 내려온 유우의 손에 제 턱을 얹는 엉뚱함과, <strong class="text-zinc-800">"파괴의 찰나를 가둬 완전한 상실을 막는다"</strong>는 깊고 투명한 시선. 요즘엔 무서운 게 없다는 그녀의 말에 묘한 끌림을 느낀 유우는, <strong class="text-zinc-800">"너 아니었으면 안 물어봤어"</strong>라는 무심한 핑계를 대며 먼저 연락처를 내민다.</p>
+                        </div>
+                        <div class="story-phase relative pl-8 md:pl-12" data-progress="30">
+                            <div class="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-zinc-400 border-4 border-paper"></div>
+                            <span class="text-xs font-bold text-zinc-500 tracking-widest uppercase block mb-1">Phase 02. 교감</span>
+                            <h4 class="text-xl font-bold text-zinc-800 mb-3">모래 위에 나란히 적은 이름과 충동적인 약속</h4>
+                            <p class="text-zinc-600 text-sm leading-relaxed mb-4">다음 날 새벽 5시, 사요의 서툰 차를 타고 도착한 와다우라 해수욕장. 운전 중 호흡이 가빠져 갓길에 차를 세운 사요에게 대신 약을 찾아준 유우는, 자고 싶지 않다는 그녀의 곁에서 조용히 허밍을 들려준다. 바다에 도착한 후, 사요가 모래사장에 <strong class="text-zinc-800">'ゆう'</strong>를 쓰자 유우는 홀린 듯 그 옆에 <strong class="text-zinc-800">'さよ'</strong>를 나란히 적어 넣는다. <strong class="text-zinc-800">"안 지워지면 좋겠는데."</strong> 붉어진 얼굴로 중얼거리는 유우에게, 사요는 그 이름을 카메라에 담으며 <strong class="text-zinc-800">"지워지지 않아"</strong>라고 다정하게 대답한다. 만난 지 하루 만에 서로에게 맹목적으로 빠져든 두 사람은, 갯내음 속에서 충동적이고도 간절한 동거를 약속한다.</p>
+                        </div>
+                        <div class="story-phase relative pl-8 md:pl-12" data-progress="50">
+                            <div class="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-yeonji border-4 border-paper shadow-[0_0_15px_rgba(82,82,91,0.5)]"></div>
+                            <span class="text-xs font-bold text-yeonji tracking-widest uppercase block mb-1">Phase 03. 일상</span>
+                            <h4 class="text-xl font-bold text-zinc-800 mb-3">일주일의 기다림, 그리고 무대 위 '거짓말쟁이'의 고백</h4>
+                            <p class="text-zinc-600 text-sm leading-relaxed mb-4">멤버 사쿠의 도움을 받아 박스 세 개와 이불 한 채뿐인 단출한 짐을 들고 사요의 집으로 이사를 마친 날. 유우는 불안스레 손톱을 물어뜯으며 자신이 단순한 프리터가 아닌 맨즈 지하돌 '앨리스 해프닝'의 '아리스'임을 고백한다. 화면 속 무대 위의 자신을 <strong class="text-zinc-800">"텅 빈 거짓말쟁이"</strong>라 자조하는 유우에게, 사요는 <strong class="text-zinc-800">"난 그 거짓말쟁이도 응원할래"</strong>라며 그의 허상마저 온전히 끌어안는다. 그 다정함에 구원받은 유우는, 춤을 보여달라는 사요의 조심스러운 부탁에 부끄러워하면서도 오직 그녀 한 사람을 위해 거실에서 안무를 선보인다. 자신의 춤을 본 사요의 칭찬에 벅차오른 유우는 그녀의 무릎에 얼굴을 묻은 채 다음 라이브의 '특등석'을 약속한다.</p>
+                        </div>
+                        <div class="story-phase relative pl-8 md:pl-12" data-progress="70">
+                            <div class="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-zinc-600 border-4 border-paper"></div>
+                            <span class="text-xs font-bold text-zinc-600 tracking-widest uppercase block mb-1">Phase 04. 무대</span>
+                            <h4 class="text-xl font-bold text-zinc-800 mb-3">수백 개의 펜라이트 너머, 오직 한 사람을 향한 손짓</h4>
+                            <p class="text-zinc-600 text-sm leading-relaxed mb-4">라이브 당일, 2층 발코니 초대석. 무대 중앙의 '아리스'는 수많은 펜라이트의 물결을 갈라내고 오직 사요만을 찾아내 손을 뻗는다. 렌즈가 아닌 맨눈으로 시선을 얽으며 건넨 무음의 속삭임. <strong class="text-zinc-800">"보고 있어, 사요."</strong> 하지만 거대한 앰프의 저음이 사요의 얇아진 심장벽을 폭력적으로 짓누르고, 그녀는 복도로 도망쳐 창백하게 주저앉는다. 공연 직후 답장이 없자 사색이 된 채 기계적으로 체키회를 버텨낸 유우는, 뒤늦은 답장에 무대 의상도 벗지 못한 채 비상계단을 뛰어내려간다. 마침내 웅크린 그녀를 찾아낸 유우는, 일 때문이었다는 그녀의 서툰 거짓말을 필사적으로 믿으려 애쓰며 집에 가자고 절박하게 매달린다.</p>
+                        </div>
+                        <div class="story-phase relative pl-8 md:pl-12" data-progress="85">
+                            <div class="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-dahee border-4 border-paper shadow-[0_0_15px_rgba(161,161,170,0.5)]"></div>
+                            <span class="text-xs font-bold text-dahee tracking-widest uppercase block mb-1">Phase 05. 진실</span>
+                            <h4 class="text-xl font-bold text-zinc-800 mb-3">종이 한 장에 적힌 '예후 불량'과 혼자 삼킨 오열</h4>
+                            <p class="text-zinc-600 text-sm leading-relaxed mb-4">사요가 업무 일정으로 외출한 사이, 불안감에 숨겨둔 담배를 피우며 집을 정리하던 유우는 그녀의 외투 주머니에서 <strong class="text-zinc-800">'난병 지정 임상조사개인표'</strong>를 발견한다. 병명은 <strong class="text-zinc-800">확장성 심근병증</strong>, 그리고 적혀 있는 <strong class="text-zinc-800">'예후 불량'</strong>. 그동안 그녀가 웃으며 숨겨온 고통과 시한부의 삶을 마주한 유우는 욕실 바닥에 주저앉아 <strong class="text-zinc-800">"왜 혼자 끌어안고 있었어, 거짓말쟁이..."</strong>라며 뼈를 깎는 오열을 토해낸다.</p>
+                        </div>
+                        <div class="story-phase relative pl-8 md:pl-12" data-progress="100">
+                            <div class="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-gradient-to-r from-yeonji to-dahee border-4 border-paper"></div>
+                            <span class="text-xs font-bold text-zinc-700 tracking-widest uppercase block mb-1">Phase 06. 영원</span>
+                            <h4 class="text-xl font-bold text-zinc-800 mb-3">"내 심장이, 유우와 이어지는 것만 같아."</h4>
+                            <p class="text-zinc-600 text-sm leading-relaxed mb-4">음식을 사 들고 돌아온 사요 앞에서 평소처럼 웃으려 애쓰던 유우는, 결국 그녀의 다정한 걱정 앞에 무너져 진단서를 보았음을 고백한다. <strong class="text-zinc-800">"내 탓이야, 내가 불안하게 하지 말라고 해서 혼자 참은 거지..."</strong> 자책하며 우는 유우에게 사요는 <strong class="text-zinc-800">"누구의 탓도 아니야. 금방 두고 가지 않아"</strong>라며 다독인다. 서로의 심장 위에 손을 얹고 고동을 확인한 두 사람은, 남은 시간이 얼마든 끝까지 함께할 것을 맹세하며 눈물 섞인 깊고 간절한 입맞춤을 나눈다.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 앨범(갤러리) 섹션 -->
+            <section id="gallery" class="max-w-5xl mx-auto px-6 py-24 border-t border-zinc-200/60">
+                <div class="text-center mb-16">
+                    <span class="text-xs font-bold text-yeonji tracking-widest uppercase block mb-2">Moments in Memories</span>
+                    <h3 class="text-3xl font-black text-zinc-800 mb-4">기억의 조각들</h3>
+                    <p class="text-zinc-500 font-light">프레임 속에 가둬둔, 지워지지 않을 순간들</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8 items-start">
+                    <div class="relative group rounded-[2.5rem] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 aspect-[4/5] bg-zinc-200 border border-zinc-200/50">
+                        <img src="https://imgur.com/pUDrWTO.png" alt="Moment 1" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/95 via-zinc-900/40 to-transparent pointer-events-none"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-8 text-white flex flex-col justify-end pointer-events-none">
+                            <span class="text-zinc-400 text-xs font-bold tracking-widest uppercase mb-1">#뒷골목의_조우</span>
+                            <h4 class="text-2xl font-bold mb-2 tracking-tight">파괴의 찰나</h4>
+                            <p class="text-zinc-200 text-sm font-light leading-relaxed">"사진, 지워주지 않을래? 나 찍은 거."<br>그 어두운 골목에서 셔터음과 함께 모든 것이 시작되었다.</p>
+                        </div>
+                    </div>
+                    <div class="relative group rounded-[2.5rem] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 aspect-[4/5] bg-zinc-200 border border-zinc-200/50 md:mt-12">
+                        <img src="https://imgur.com/YULm0M1.png" alt="Moment 2" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/95 via-zinc-900/40 to-transparent pointer-events-none"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-8 text-white flex flex-col justify-end pointer-events-none">
+                            <span class="text-zinc-400 text-xs font-bold tracking-widest uppercase mb-1">#새벽_바다</span>
+                            <h4 class="text-2xl font-bold mb-2 tracking-tight">모래 위의 이름</h4>
+                            <p class="text-zinc-200 text-sm font-light leading-relaxed">"안 지워지면 좋겠는데."<br>모래 위에 나란히 적힌 두 사람의 이름.</p>
+                        </div>
+                    </div>
+                    <div class="relative group rounded-[2.5rem] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 aspect-[4/5] bg-zinc-200 border border-zinc-200/50">
+                        <img src="https://imgur.com/xOxCLgC.png" alt="Moment 3" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/95 via-zinc-900/40 to-transparent pointer-events-none"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-8 text-white flex flex-col justify-end pointer-events-none">
+                            <span class="text-zinc-400 text-xs font-bold tracking-widest uppercase mb-1">#라이브하우스_초대석</span>
+                            <h4 class="text-2xl font-bold mb-2 tracking-tight">오직 너를 위한 무대</h4>
+                            <p class="text-zinc-200 text-sm font-light leading-relaxed">수백 명의 환호 속에서도, 아리스의 시선이 머무는 곳은 오직 2층 발코니의 사요뿐이었다.</p>
+                        </div>
+                    </div>
+                    <div class="relative group rounded-[2.5rem] overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 aspect-[4/5] bg-zinc-200 border border-zinc-200/50 md:mt-12">
+                        <img src="https://imgur.com/taTUcRM.png" alt="Moment 4" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-zinc-900/95 via-zinc-900/40 to-transparent pointer-events-none"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-8 text-white flex flex-col justify-end pointer-events-none">
+                            <span class="text-zinc-400 text-xs font-bold tracking-widest uppercase mb-1">#거실의_고백</span>
+                            <h4 class="text-2xl font-bold mb-2 tracking-tight">무너진 세계</h4>
+                            <p class="text-zinc-200 text-sm font-light leading-relaxed">"...내 심장이, 유우와 이어지는 것만 같아."<br>"나의 것도, 사요를 위해 뛰고 있어. ...그러니까, 같은거네."</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer id="main-footer" class="bg-zinc-200/50 py-10 text-center transition-colors">
+                <p class="text-xs text-zinc-500 font-medium tracking-widest uppercase">&copy; センチメンタルな恋</p>
+            </footer>
+        </div>
+    </div>
+
+
+    <!-- ==========================================
+         [스크립트] 전체 로직 제어
+    =========================================== -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // 1. BGM 버튼 로직
-            const bgmBtn = document.getElementById('bgmBtn');
-            const bgm = document.getElementById('bgm');
-            let isPlaying = false;
+        // 1. 랜딩 화면 셔터 연출
+        const shutterBtn = document.getElementById('shutter-btn');
+        const blurOverlay = document.getElementById('blur-overlay');
+        const bgImage = document.getElementById('bg-image');
+        const flashScreen = document.getElementById('flash-screen');
+        const menuPanel = document.getElementById('menu-panel');
+        const viewfinderUi = document.getElementById('viewfinder-ui');
+        const menuTitle = document.getElementById('menu-title');
+        const menuLinks = document.getElementById('menu-links');
+        const menuCaption = document.getElementById('menu-caption');
 
-            bgmBtn.addEventListener('click', () => {
-                if (isPlaying) {
-                    bgm.pause();
-                    bgmBtn.classList.remove('text-yeonji', 'border-yeonji/50', 'shadow-[0_0_20px_rgba(82,82,91,0.4)]');
-                    bgmBtn.classList.add('text-zinc-400', 'border-zinc-200');
+        shutterBtn.addEventListener('click', () => {
+            flashScreen.classList.add('flash-active');
+            shutterBtn.style.opacity = '0';
+            shutterBtn.style.pointerEvents = 'none';
+
+            setTimeout(() => {
+                blurOverlay.classList.remove('bg-black/60', 'backdrop-blur-xl');
+                blurOverlay.classList.add('bg-black/30');
+                bgImage.classList.remove('scale-110');
+                bgImage.classList.add('scale-100');
+                viewfinderUi.style.opacity = '0';
+                
+                menuPanel.style.opacity = '1';
+                menuPanel.style.pointerEvents = 'auto';
+                menuTitle.classList.remove('translate-y-4');
+                menuLinks.classList.remove('translate-y-4');
+                menuCaption.style.opacity = '1';
+            }, 150);
+        });
+
+        // 2. 페이지(앱) 간 이동 로직 (레이아웃 보호를 위해 완전히 분리)
+        function goToPage(pageId) {
+            // 모든 오디오 정지
+            document.querySelectorAll('audio').forEach(audio => {
+                audio.pause();
+                audio.currentTime = 0;
+            });
+            document.querySelectorAll('.music-player').forEach(player => player.classList.remove('playing'));
+            
+            // 서사 BGM 버튼 초기화
+            isStoryPlaying = false;
+            const bgmBtnUI = document.getElementById('bgmBtn');
+            bgmBtnUI.classList.remove('text-yeonji', 'border-yeonji/50', 'shadow-[0_0_20px_rgba(82,82,91,0.4)]');
+            bgmBtnUI.classList.add('text-zinc-400', 'border-zinc-200');
+
+            // 모든 페이지 숨기기 (페이드 아웃)
+            const pages = ['page-landing', 'page-archive', 'page-narrative'];
+            pages.forEach(p => {
+                const el = document.getElementById(p);
+                if (p === 'page-' + pageId) {
+                    el.classList.remove('hidden');
+                    // 브라우저 렌더링 강제 업데이트
+                    void el.offsetWidth;
+                    el.style.opacity = '1';
                 } else {
-                    bgm.play();
-                    bgmBtn.classList.remove('text-zinc-400', 'border-zinc-200');
-                    bgmBtn.classList.add('text-yeonji', 'border-yeonji/50', 'shadow-[0_0_20px_rgba(82,82,91,0.4)]');
-                }
-                isPlaying = !isPlaying;
-            });
-
-            // 2. 6페이즈 확장판 서사 스크롤 프로그레스 바
-            const storySection = document.getElementById('story');
-            const trustBar = document.getElementById('trust-bar');
-            const trustText = document.getElementById('trust-text');
-            const phases = document.querySelectorAll('.story-phase');
-
-            window.addEventListener('scroll', () => {
-                const rect = storySection.getBoundingClientRect();
-                const windowHeight = window.innerHeight;
-                if (rect.top < windowHeight && rect.bottom > 0) {
-                    let currentProgress = 0;
-                    phases.forEach(phase => {
-                        const phaseRect = phase.getBoundingClientRect();
-                        if(phaseRect.top < windowHeight * 0.6) currentProgress = phase.getAttribute('data-progress');
-                    });
-                    trustBar.style.height = `${currentProgress}%`;
-                    if (currentProgress < 20) {
-                        trustText.innerText = "15%\n(호기심)";
-                        trustText.className = "text-xs font-bold text-zinc-400 mt-3 text-center transition-all whitespace-pre-line";
-                    } else if (currentProgress < 40) {
-                        trustText.innerText = "30%\n(교감)";
-                        trustText.className = "text-xs font-bold text-zinc-500 mt-3 text-center transition-all whitespace-pre-line";
-                    } else if (currentProgress < 60) {
-                        trustText.innerText = "50%\n(거짓말)";
-                        trustText.className = "text-xs font-bold text-yeonji mt-3 text-center transition-all whitespace-pre-line";
-                    } else if (currentProgress < 80) {
-                        trustText.innerText = "70%\n(무대)";
-                        trustText.className = "text-xs font-bold text-zinc-600 mt-3 text-center transition-all whitespace-pre-line";
-                    } else if (currentProgress < 95) {
-                        trustText.innerText = "85%\n(진실)";
-                        trustText.className = "text-xs font-bold text-dahee mt-3 text-center transition-all whitespace-pre-line";
-                    } else {
-                        trustText.innerText = "100%\n(영원)";
-                        trustText.className = "text-xs font-bold text-transparent bg-clip-text bg-gradient-to-r from-yeonji to-dahee mt-3 text-center transition-all whitespace-pre-line";
-                    }
+                    el.style.opacity = '0';
+                    setTimeout(() => {
+                        if(el.style.opacity === '0') el.classList.add('hidden');
+                    }, 500);
                 }
             });
+
+            // 바디 스크롤 제어 (서사 페이지만 스크롤 허용)
+            setTimeout(() => {
+                if (pageId === 'narrative') {
+                    document.body.style.overflow = 'auto';
+                    window.scrollTo(0, 0);
+                } else {
+                    document.body.style.overflow = 'hidden';
+                }
+            }, 10);
+
+            // 아카이브로 갈 때 메인 뷰로 초기화
+            if (pageId === 'archive') {
+                document.querySelectorAll('#page-archive .view-section').forEach(el => {
+                    el.classList.add('hidden', 'opacity-0');
+                    el.classList.remove('flex', 'opacity-100');
+                });
+                const mainView = document.getElementById('view-main');
+                mainView.classList.remove('hidden', 'opacity-0');
+                mainView.classList.add('flex', 'opacity-100');
+                
+                // 아코디언 닫기
+                document.querySelectorAll('.expand-content').forEach(el => el.classList.remove('active'));
+                document.querySelectorAll('[id^="icon"]').forEach(icon => icon.style.transform = 'rotate(0deg)');
+            }
+        }
+
+        // 3. 아카이브(프로필) 내부 뷰 전환 로직
+        let isArchiveAnimating = false;
+        function switchArchiveView(targetId) {
+            if (isArchiveAnimating) return;
+            
+            const targetEl = document.getElementById(targetId);
+            const activeEl = document.querySelector('#page-archive .view-section:not(.hidden)');
+            
+            if (activeEl && activeEl.id === targetId) return;
+            isArchiveAnimating = true;
+
+            // 오디오 정지
+            document.querySelectorAll('audio').forEach(audio => { audio.pause(); audio.currentTime = 0; });
+            document.querySelectorAll('.music-player').forEach(player => player.classList.remove('playing'));
+
+            // 아코디언 닫기
+            document.querySelectorAll('.expand-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('[id^="icon"]').forEach(icon => icon.style.transform = 'rotate(0deg)');
+
+            if (activeEl) {
+                activeEl.classList.remove('opacity-100');
+                activeEl.classList.add('opacity-0');
+                
+                setTimeout(() => {
+                    activeEl.classList.add('hidden');
+                    activeEl.classList.remove('flex');
+                    
+                    targetEl.classList.remove('hidden');
+                    targetEl.classList.add('flex');
+                    
+                    setTimeout(() => {
+                        targetEl.classList.remove('opacity-0');
+                        targetEl.classList.add('opacity-100');
+                        setTimeout(() => { isArchiveAnimating = false; }, 700);
+                    }, 50);
+                }, 700);
+            }
+        }
+
+        // 4. 프로필 테마 BGM 제어
+        function toggleAudio(charId) {
+            const targetAudio = document.getElementById('audio-' + charId);
+            const targetPlayer = document.getElementById('player-' + charId);
+            const isPlaying = targetPlayer.classList.contains('playing');
+
+            document.querySelectorAll('audio').forEach(audio => audio.pause());
+            document.querySelectorAll('.music-player').forEach(player => player.classList.remove('playing'));
+
+            if (!isPlaying) {
+                targetAudio.play().catch(e => console.log("재생 실패:", e));
+                targetPlayer.classList.add('playing');
+            }
+        }
+
+        // 5. 프로필 코멘트 토글 로직
+        function toggleComment(contentId, iconId) {
+            const content = document.getElementById(contentId);
+            const icon = document.getElementById(iconId);
+            if (content.classList.contains('active')) {
+                content.classList.remove('active');
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                content.classList.add('active');
+                icon.style.transform = 'rotate(180deg)';
+                setTimeout(() => { content.scrollIntoView({ behavior: 'smooth', block: 'end' }); }, 300);
+            }
+        }
+
+        // 6. 서사 페이지 메인 BGM 제어
+        const bgmBtn = document.getElementById('bgmBtn');
+        const audioStory = document.getElementById('audio-narrative');
+        let isStoryPlaying = false;
+
+        bgmBtn.addEventListener('click', () => {
+            if (isStoryPlaying) {
+                audioStory.pause();
+                bgmBtn.classList.remove('text-yeonji', 'border-yeonji/50', 'shadow-[0_0_20px_rgba(82,82,91,0.4)]');
+                bgmBtn.classList.add('text-zinc-400', 'border-zinc-200');
+            } else {
+                audioStory.play().catch(e => console.log("재생 실패:", e));
+                bgmBtn.classList.remove('text-zinc-400', 'border-zinc-200');
+                bgmBtn.classList.add('text-yeonji', 'border-yeonji/50', 'shadow-[0_0_20px_rgba(82,82,91,0.4)]');
+            }
+            isStoryPlaying = !isStoryPlaying;
+        });
+
+        // 7. 서사 페이지 스크롤 프로그레스 바 (원본 로직 완벽 보존)
+        const storySection = document.getElementById('story');
+        const trustBar = document.getElementById('trust-bar');
+        const trustText = document.getElementById('trust-text');
+        const phases = document.querySelectorAll('.story-phase');
+
+        window.addEventListener('scroll', () => {
+            // 서사 페이지가 활성화된 상태에서만 작동
+            if (document.getElementById('page-narrative').classList.contains('hidden')) return;
+
+            const rect = storySection.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+            
+            if (rect.top < windowHeight && rect.bottom > 0) {
+                let currentProgress = 0;
+                phases.forEach(phase => {
+                    const phaseRect = phase.getBoundingClientRect();
+                    if(phaseRect.top < windowHeight * 0.6) currentProgress = phase.getAttribute('data-progress');
+                });
+                trustBar.style.height = `${currentProgress}%`;
+                
+                if (currentProgress < 20) {
+                    trustText.innerText = "15%\n(호기심)";
+                    trustText.className = "text-xs font-bold text-zinc-400 mt-3 text-center transition-all whitespace-pre-line";
+                } else if (currentProgress < 40) {
+                    trustText.innerText = "30%\n(교감)";
+                    trustText.className = "text-xs font-bold text-zinc-500 mt-3 text-center transition-all whitespace-pre-line";
+                } else if (currentProgress < 60) {
+                    trustText.innerText = "50%\n(거짓말)";
+                    trustText.className = "text-xs font-bold text-yeonji mt-3 text-center transition-all whitespace-pre-line";
+                } else if (currentProgress < 80) {
+                    trustText.innerText = "70%\n(무대)";
+                    trustText.className = "text-xs font-bold text-zinc-600 mt-3 text-center transition-all whitespace-pre-line";
+                } else if (currentProgress < 95) {
+                    trustText.innerText = "85%\n(진실)";
+                    trustText.className = "text-xs font-bold text-dahee mt-3 text-center transition-all whitespace-pre-line";
+                } else {
+                    trustText.innerText = "100%\n(영원)";
+                    trustText.className = "text-xs font-bold text-transparent bg-clip-text bg-gradient-to-r from-yeonji to-dahee mt-3 text-center transition-all whitespace-pre-line";
+                }
+            }
         });
     </script>
 </body>
