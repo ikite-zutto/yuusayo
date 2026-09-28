@@ -8,9 +8,9 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- 폰트: 프로필용(Pretendard) & 서사용(Noto Sans KR) 모두 로드 -->
+    <!-- 폰트: 프로필용(Pretendard), 서사용(Noto Sans KR), 갤러리용(Noto Serif KR) 모두 로드 -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@200;300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@200;300;400;500;700;900&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
@@ -54,6 +54,66 @@
             transform-origin: center; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
         }
         .nav-link:hover::after { transform: scaleX(1); }
+
+        /* ==========================================
+           아카이브 메인 (갤러리) 전용 스타일
+        ========================================== */
+        .font-serif-kr { font-family: 'Noto Serif KR', serif; }
+        .font-sans-kr { font-family: 'Noto Sans KR', sans-serif; }
+
+        #wall-shadow {
+            position: absolute; inset: 0;
+            background-image: url('https://images.unsplash.com/photo-1611077544811-0428564883fc?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover; background-position: center;
+            filter: grayscale(100%) contrast(250%) brightness(0.4) blur(4px);
+            mix-blend-mode: multiply;
+            opacity: 0.4; 
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        #spotlight {
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 100%; height: 100%;
+            background: radial-gradient(ellipse at 50% -20%, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 70%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .acrylic-frame {
+            position: relative; width: 320px; height: 460px; border-radius: 4px;
+            box-shadow: 
+                0 25px 50px -12px rgba(0,0,0,0.3),
+                0 0 0 1px rgba(255,255,255,0.3) inset, 
+                -2px -2px 6px rgba(255,255,255,0.5) inset,
+                2px 2px 6px rgba(0,0,0,0.1) inset;
+            overflow: hidden;
+            transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.8s ease;
+        }
+
+        .group:hover .acrylic-frame { 
+            transform: translateY(-5px) scale(1.02); 
+            box-shadow: 
+                0 35px 60px -15px rgba(0,0,0,0.4), 
+                0 0 0 1px rgba(255,255,255,0.4) inset, 
+                -3px -3px 8px rgba(255,255,255,0.7) inset,
+                3px 3px 8px rgba(0,0,0,0.15) inset;
+        }
+
+        .glass-glare {
+            position: absolute; inset: 0;
+            background: linear-gradient(
+                110deg, 
+                rgba(255,255,255,0) 15%, 
+                rgba(255,255,255,0.25) 20%, 
+                rgba(255,255,255,0.05) 35%, 
+                rgba(255,255,255,0) 40%, 
+                rgba(255,255,255,0) 60%, 
+                rgba(255,255,255,0.12) 65%, 
+                rgba(255,255,255,0) 70%
+            );
+            pointer-events: none; z-index: 10;
+        }
 
         /* ==========================================
            원본 서사 페이지 스타일 (그대로 보존)
@@ -157,43 +217,59 @@
     <!-- ==========================================
          [페이지 1] 아카이브(프로필) 페이지
     =========================================== -->
-    <div id="page-archive" class="hidden fixed inset-0 z-[90] bg-gray-50 text-gray-800 antialiased font-sans overflow-hidden transition-opacity duration-700 opacity-0">
+    <div id="page-archive" class="hidden fixed inset-0 z-[90] bg-[#f4f4f5] text-gray-800 antialiased font-sans overflow-hidden transition-opacity duration-700 opacity-0">
         
-        <!-- 아카이브 메인 뷰 (1280x720 고정 해상도) -->
-        <div id="view-main" class="view-section absolute inset-0 flex items-center justify-center transition-all duration-700 opacity-100 z-10 bg-gray-50">
+        <!-- 아카이브 메인 뷰 (1280x720 고정 해상도, 갤러리 디자인) -->
+        <div id="view-main" class="view-section absolute inset-0 flex items-center justify-center transition-all duration-700 opacity-100 z-10 bg-[#f4f4f5] overflow-hidden">
             
-            <div class="relative w-[1280px] h-[720px] flex flex-col items-center justify-center shrink-0">
-                <!-- 아카이브 메인 화면 전용 홈 버튼 -->
-                <button onclick="goToPage('landing')" class="absolute top-8 left-8 z-[100] text-gray-400 hover:text-gray-800 transition-colors flex items-center gap-2 text-xs font-bold tracking-widest uppercase group">
-                    <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                    MAIN HOME
-                </button>
+            <!-- 나뭇잎 그림자 & 조명 -->
+            <div id="wall-shadow"></div>
+            <div id="spotlight"></div>
 
-                <div class="text-center mb-12">
-                    <span class="text-xs font-bold tracking-[0.4em] text-gray-400 block mb-3 uppercase">Pair Archive</span>
-                    <h1 class="text-5xl font-light text-gray-800 tracking-tight">君という猶予</h1>
-                    <p class="mt-4 text-sm text-gray-500 font-light tracking-widest">너라는 유예</p>
-                </div>
-                <div class="flex flex-row justify-center items-center gap-16 relative w-full px-6">
-                    <div onclick="switchArchiveView('view-char1')" class="group relative w-[380px] h-[540px] rounded-3xl overflow-hidden cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-gray-200">
-                        <img src="https://imgur.com/yThETlE.png" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-char1/95 via-char1/40 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        <div class="absolute bottom-0 left-0 w-full p-8 text-white transform transition-transform duration-500">
-                            <span class="px-3 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-[11px] font-bold tracking-widest text-white mb-4 inline-block">지하 아이돌</span>
-                            <h2 class="text-4xl font-bold mb-3">시노노메 유우</h2>
-                            <p class="text-sm font-light text-gray-200 line-clamp-2 leading-relaxed">화려한 조명 아래서 텅 빈 미소를 지어내는 도쿄의 인기 지하 아이돌.</p>
+            <div class="relative z-10 w-[1280px] h-[720px] flex flex-col items-center justify-center shrink-0">
+                
+                <!-- 갤러리 액자 (투샷) -->
+                <div class="flex flex-row gap-24 items-center justify-center w-full mt-10">
+                    
+                    <!-- [왼쪽] 유우 (東雲 悠) -->
+                    <button onclick="switchArchiveView('view-char1')" class="group flex flex-col items-center cursor-pointer outline-none bg-transparent border-none">
+                        <div class="acrylic-frame">
+                            <img src="https://imgur.com/ErYgGrb.png" class="absolute inset-0 w-full h-full object-cover transition-all duration-700 grayscale-[25%] group-hover:grayscale-0 group-hover:scale-105">
+                            <div class="glass-glare"></div>
                         </div>
-                    </div>
-                    <div onclick="switchArchiveView('view-char2')" class="group relative w-[380px] h-[540px] rounded-3xl overflow-hidden cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-gray-200">
-                        <img src="https://imgur.com/HToL5G9.png" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-char1/95 via-char1/40 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500"></div>
-                        <div class="absolute bottom-0 left-0 w-full p-8 text-white transform transition-transform duration-500">
-                            <span class="px-3 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-[11px] font-bold tracking-widest text-white mb-4 inline-block">프리랜서 사진가</span>
-                            <h2 class="text-4xl font-bold mb-3">아야세 사요</h2>
-                            <p class="text-sm font-light text-gray-200 line-clamp-2 leading-relaxed">언제 멈출지 모르는 고장 난 심장을 품고 세상의 부서지는 찰나를 기록하는 사진가.</p>
+                        <div class="mt-8 text-center transition-transform duration-500 group-hover:-translate-y-1">
+                            <h2 class="font-serif-kr text-3xl font-bold text-zinc-800 mb-1.5 tracking-widest">東雲 悠</h2>
+                            <p class="font-sans-kr text-xs text-zinc-500 tracking-widest uppercase mb-1">Shinonome Yuu</p>
+                            <p class="font-sans-kr text-[10px] text-zinc-400 font-light">Archival pigment print</p>
+                            <div class="h-px w-0 bg-zinc-400 mx-auto mt-4 transition-all duration-500 group-hover:w-8"></div>
                         </div>
-                    </div>
+                    </button>
+
+                    <!-- [오른쪽] 사요 (綾瀬 小夜) -->
+                    <button onclick="switchArchiveView('view-char2')" class="group flex flex-col items-center cursor-pointer outline-none bg-transparent border-none">
+                        <div class="acrylic-frame">
+                            <img src="https://imgur.com/77VL3mi.png" class="absolute inset-0 w-full h-full object-cover transition-all duration-700 grayscale-[25%] group-hover:grayscale-0 group-hover:scale-105">
+                            <div class="glass-glare"></div>
+                        </div>
+                        <div class="mt-8 text-center transition-transform duration-500 group-hover:-translate-y-1">
+                            <h2 class="font-serif-kr text-3xl font-bold text-zinc-800 mb-1.5 tracking-widest">綾瀬 小夜</h2>
+                            <p class="font-sans-kr text-xs text-zinc-500 tracking-widest uppercase mb-1">Ayase Sayo</p>
+                            <p class="font-sans-kr text-[10px] text-zinc-400 font-light">Archival pigment print</p>
+                            <div class="h-px w-0 bg-zinc-400 mx-auto mt-4 transition-all duration-500 group-hover:w-8"></div>
+                        </div>
+                    </button>
+
                 </div>
+
+                <!-- 메인 홈으로 돌아가기 버튼 -->
+                <div class="mt-20 flex items-center justify-center">
+                    <button onclick="goToPage('landing')" class="group/btn relative text-zinc-500 hover:text-zinc-900 transition-colors duration-300 outline-none flex flex-col items-center bg-transparent border-none">
+                        <span class="font-serif-kr text-lg tracking-[0.4em] uppercase">Main Home</span>
+                        <span class="block font-sans-kr text-[9px] text-zinc-400 group-hover/btn:text-zinc-600 tracking-widest mt-1 transition-colors">메인으로 돌아가기</span>
+                        <div class="absolute -bottom-3 left-1/2 -translate-x-1/2 w-0 h-[1px] bg-zinc-900 transition-all duration-300 group-hover/btn:w-full"></div>
+                    </button>
+                </div>
+
             </div>
         </div>
 
