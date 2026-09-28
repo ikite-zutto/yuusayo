@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <!-- 기본은 모바일 반응형으로 설정 (서사 페이지 진입 시 스크립트로 1280px 강제 전환됨) -->
+    <!-- 기본은 모바일 반응형으로 설정 (서사, 아카이브 메인 페이지 진입 시 스크립트로 1280px 강제 전환됨) -->
     <meta id="viewport-meta" name="viewport" content="width=device-width, initial-scale=1.0">
     <title>너라는 유예</title>
     
@@ -159,37 +159,39 @@
     =========================================== -->
     <div id="page-archive" class="hidden fixed inset-0 z-[90] bg-gray-50 text-gray-800 antialiased font-sans overflow-hidden transition-opacity duration-700 opacity-0">
         
-        <!-- 아카이브 메인 뷰 -->
-        <div id="view-main" class="view-section absolute inset-0 flex flex-col items-center justify-center transition-all duration-700 opacity-100 z-10 bg-gray-50">
+        <!-- 아카이브 메인 뷰 (1280x720 고정 해상도) -->
+        <div id="view-main" class="view-section absolute inset-0 flex items-center justify-center transition-all duration-700 opacity-100 z-10 bg-gray-50">
             
-            <!-- 아카이브 메인 화면 전용 홈 버튼 (여백이 많은 좌측 상단 배치) -->
-            <button onclick="goToPage('landing')" class="absolute top-8 left-8 z-[100] text-gray-400 hover:text-gray-800 transition-colors flex items-center gap-2 text-xs font-bold tracking-widest uppercase group">
-                <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
-                MAIN HOME
-            </button>
+            <div class="relative w-[1280px] h-[720px] flex flex-col items-center justify-center shrink-0">
+                <!-- 아카이브 메인 화면 전용 홈 버튼 -->
+                <button onclick="goToPage('landing')" class="absolute top-8 left-8 z-[100] text-gray-400 hover:text-gray-800 transition-colors flex items-center gap-2 text-xs font-bold tracking-widest uppercase group">
+                    <svg class="w-5 h-5 group-hover:-translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    MAIN HOME
+                </button>
 
-            <div class="text-center mb-12">
-                <span class="text-xs font-bold tracking-[0.4em] text-gray-400 block mb-3 uppercase">Pair Archive</span>
-                <h1 class="text-5xl font-light text-gray-800 tracking-tight">君という猶予</h1>
-                <p class="mt-4 text-sm text-gray-500 font-light tracking-widest">너라는 유예</p>
-            </div>
-            <div class="flex flex-col md:flex-row justify-center items-center gap-8 md:gap-16 relative w-full max-w-6xl px-6">
-                <div onclick="switchArchiveView('view-char1')" class="group relative w-full md:w-[380px] h-[540px] rounded-3xl overflow-hidden cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-gray-200">
-                    <img src="https://imgur.com/yThETlE.png" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                    <div class="absolute inset-0 bg-gradient-to-t from-char1/95 via-char1/40 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div class="absolute bottom-0 left-0 w-full p-8 text-white transform transition-transform duration-500">
-                        <span class="px-3 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-[11px] font-bold tracking-widest text-white mb-4 inline-block">지하 아이돌</span>
-                        <h2 class="text-4xl font-bold mb-3">시노노메 유우</h2>
-                        <p class="text-sm font-light text-gray-200 line-clamp-2 leading-relaxed">화려한 조명 아래서 텅 빈 미소를 지어내는 도쿄의 인기 지하 아이돌.</p>
-                    </div>
+                <div class="text-center mb-12">
+                    <span class="text-xs font-bold tracking-[0.4em] text-gray-400 block mb-3 uppercase">Pair Archive</span>
+                    <h1 class="text-5xl font-light text-gray-800 tracking-tight">君という猶予</h1>
+                    <p class="mt-4 text-sm text-gray-500 font-light tracking-widest">너라는 유예</p>
                 </div>
-                <div onclick="switchArchiveView('view-char2')" class="group relative w-full md:w-[380px] h-[540px] rounded-3xl overflow-hidden cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-gray-200">
-                    <img src="https://imgur.com/HToL5G9.png" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-                    <div class="absolute inset-0 bg-gradient-to-t from-char1/95 via-char1/40 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500"></div>
-                    <div class="absolute bottom-0 left-0 w-full p-8 text-white transform transition-transform duration-500">
-                        <span class="px-3 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-[11px] font-bold tracking-widest text-white mb-4 inline-block">프리랜서 사진가</span>
-                        <h2 class="text-4xl font-bold mb-3">아야세 사요</h2>
-                        <p class="text-sm font-light text-gray-200 line-clamp-2 leading-relaxed">언제 멈출지 모르는 고장 난 심장을 품고 세상의 부서지는 찰나를 기록하는 사진가.</p>
+                <div class="flex flex-row justify-center items-center gap-16 relative w-full px-6">
+                    <div onclick="switchArchiveView('view-char1')" class="group relative w-[380px] h-[540px] rounded-3xl overflow-hidden cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-gray-200">
+                        <img src="https://imgur.com/yThETlE.png" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-char1/95 via-char1/40 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-8 text-white transform transition-transform duration-500">
+                            <span class="px-3 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-[11px] font-bold tracking-widest text-white mb-4 inline-block">지하 아이돌</span>
+                            <h2 class="text-4xl font-bold mb-3">시노노메 유우</h2>
+                            <p class="text-sm font-light text-gray-200 line-clamp-2 leading-relaxed">화려한 조명 아래서 텅 빈 미소를 지어내는 도쿄의 인기 지하 아이돌.</p>
+                        </div>
+                    </div>
+                    <div onclick="switchArchiveView('view-char2')" class="group relative w-[380px] h-[540px] rounded-3xl overflow-hidden cursor-pointer shadow-md hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 bg-gray-200">
+                        <img src="https://imgur.com/HToL5G9.png" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-char1/95 via-char1/40 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div class="absolute bottom-0 left-0 w-full p-8 text-white transform transition-transform duration-500">
+                            <span class="px-3 py-1.5 bg-white/20 backdrop-blur-md rounded-full text-[11px] font-bold tracking-widest text-white mb-4 inline-block">프리랜서 사진가</span>
+                            <h2 class="text-4xl font-bold mb-3">아야세 사요</h2>
+                            <p class="text-sm font-light text-gray-200 line-clamp-2 leading-relaxed">언제 멈출지 모르는 고장 난 심장을 품고 세상의 부서지는 찰나를 기록하는 사진가.</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -208,7 +210,7 @@
             </div>
             <div class="w-full md:w-[55vw] h-[60vh] md:h-screen overflow-y-auto custom-scroll relative bg-white px-8 py-10 md:px-20 md:py-16">
                 
-                <!-- 수정된 네비게이션 버튼 영역 (글자와 겹치지 않게 본문 상단에 배치) -->
+                <!-- 수정된 네비게이션 버튼 영역 -->
                 <div class="flex items-center gap-3 mb-12">
                     <button onclick="switchArchiveView('view-main')" class="flex items-center justify-center w-11 h-11 bg-gray-50 text-gray-400 hover:text-char1 hover:bg-char1/5 rounded-full transition-all duration-300 hover:-translate-x-1 shadow-sm border border-gray-100" title="뒤로 가기">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
@@ -326,7 +328,7 @@
             </div>
             <div class="w-full md:w-[55vw] h-[60vh] md:h-screen overflow-y-auto custom-scroll relative bg-white px-8 py-10 md:px-20 md:py-16">
                 
-                <!-- 수정된 네비게이션 버튼 영역 (글자와 겹치지 않게 본문 상단에 배치) -->
+                <!-- 수정된 네비게이션 버튼 영역 -->
                 <div class="flex items-center gap-3 mb-12">
                     <button onclick="switchArchiveView('view-main')" class="flex items-center justify-center w-11 h-11 bg-gray-50 text-gray-400 hover:text-char2 hover:bg-char2/5 rounded-full transition-all duration-300 hover:-translate-x-1 shadow-sm border border-gray-100" title="뒤로 가기">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
@@ -651,32 +653,26 @@
                         <p class="text-zinc-600 text-sm leading-relaxed mb-4">음식을 사 들고 돌아온 사요 앞에서 평소처럼 웃으려 애쓰던 유우는, 결국 그녀의 다정한 걱정 앞에 무너져 진단서를 보았음을 고백한다. <strong class="text-zinc-800">"내 탓이야, 내가 불안하게 하지 말라고 해서 혼자 참은 거지..."</strong> 자책하며 우는 유우에게 사요는 <strong class="text-zinc-800">"누구의 탓도 아니야. 금방 두고 가지 않아"</strong>라며 다독인다. 서로의 심장 위에 손을 얹고 고동을 확인한 두 사람은, 남은 시간이 얼마든 끝까지 함께할 것을 맹세하며 눈물 섞인 깊고 간절한 입맞춤을 나눈다.</p>
                     </div>
                     <div class="story-phase relative pl-8 md:pl-12" data-progress="70">
-                        <div class="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-zinc-600 border-4 border-paper"></div>
-                        <span class="text-xs font-bold text-zinc-600 tracking-widest uppercase block mb-1">Phase 07. 질투</span>
-                        <h4 class="text-xl font-bold text-zinc-800 mb-3">렌즈 너머의 시선과 감출 수 없는 소유욕</h4>
-                        <p class="text-zinc-600 text-sm leading-relaxed mb-4">아리하프의 새 프로필 촬영을 맡게 된 사요. 무대 위 '아리스'로서 프로페셔널하게 촬영에 임하던 유우는, 사요가 다른 멤버들에게 다가가 포즈를 지시할 때마다 피어오르는 질투를 숨기지 못한다. 촬영이 끝난 후 집으로 돌아온 유우는 사요의 어깨에 얼굴을 묻으며 <strong class="text-zinc-800">"내 여자친구한테 함부로 만지지 말라고 생각했어"</strong>라며 어리광 섞인 소유욕을 드러내고, 사요 역시 유우의 곁을 맴도는 다른 이들에게 질투를 느꼈음을 고백하며 서로의 깊어진 마음을 확인한다.</p>
-                    </div>
-                    <div class="story-phase relative pl-8 md:pl-12" data-progress="80">
                         <div class="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-dahee border-4 border-paper shadow-[0_0_15px_rgba(161,161,170,0.5)]"></div>
-                        <span class="text-xs font-bold text-dahee tracking-widest uppercase block mb-1">Phase 08. 여명</span>
+                        <span class="text-xs font-bold text-dahee tracking-widest uppercase block mb-1">Phase 07. 여명</span>
                         <h4 class="text-xl font-bold text-zinc-800 mb-3">모래시계의 끝, 그리고 가장 이기적인 구원</h4>
                         <p class="text-zinc-600 text-sm leading-relaxed mb-4">서로의 온기에 기대어 쌓아 올린 애틋한 시간 끝에, 마침내 찾아온 이듬해 7월의 초순. 사요의 여명이 일주일 남은 아침. 잠든 사요의 앙상해진 손을 쥐고 몰래 눈물을 삼키던 유우는, 눈을 뜬 사요로부터 "내가 없더라도 살아달라고 하면 욕심일까"라는 애달픈 부탁을 듣는다. 그 말에 완전히 무너져 내린 유우는 "네가 없는 세상에서 내가 어떻게 살아. 네가 가는 곳이라면 나도 같이 갈 거야"라며 아이처럼 오열한다. 항상 유우 앞에서는 웃기만 하던 사요 역시 처음으로 소리 내어 울며, 그의 찬란하게 빛날 수 있는 시간을 뺏어 미안하다고 사과한다. 유우는 눈물투성이의 얼굴로 고개를 저었다. <strong class="text-zinc-800">"뺏은 게 아니야. 준 거야. 사요가 나한테, 전부."</strong> 그것은 두 사람의 삶을 온전히 하나로 묶는 처절하고도 아름다운 구원의 순간이었다.</p>
                     </div>
-                    <div class="story-phase relative pl-8 md:pl-12" data-progress="90">
+                    <div class="story-phase relative pl-8 md:pl-12" data-progress="80">
                         <div class="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-yeonji border-4 border-paper shadow-[0_0_15px_rgba(82,82,91,0.5)]"></div>
-                        <span class="text-xs font-bold text-yeonji tracking-widest uppercase block mb-1">Phase 09. 영원</span>
+                        <span class="text-xs font-bold text-yeonji tracking-widest uppercase block mb-1">Phase 08. 영원</span>
                         <h4 class="text-xl font-bold text-zinc-800 mb-3">来世でも、その次も。ずっと。</h4>
                         <p class="text-zinc-600 text-sm leading-relaxed mb-4">마지막 날, 두 사람은 처음으로 마음을 확인했던 와다우라 해변을 다시 찾는다. "정말 괜찮아?"라는 사요의 마지막 물음에, 유우는 "내 인생에서 가장 빛나는 시간은 사요의 옆에 있는 지금이야"라며 평온하게 미소 짓는다. 대시보드 위에 <strong class="text-zinc-800">'ずっと一緒'</strong>라 적힌 마지막 폴라로이드 사진을 남긴 채, 두 사람은 쏟아지는 별빛 아래 차가운 밤바다로 걸어 들어간다. 수압이 몸을 짓누르고 숨이 막혀오는 물속에서도 유우는 사요를 절대 놓지 않고 꽉 끌어안는다. 의식이 흐려지는 마지막 순간, 물속에서 눈을 뜬 유우는 사요의 평온한 얼굴을 보며 미소 짓고, 사요의 손가락이 유우의 목덜미를 다정하게 쓰다듬으며 <strong class="text-zinc-800"> 2026년 7월 12일, 두 사람의 세상은 완전한 암전을 맞이한다.</strong></p>
                     </div>
-                    <div class="story-phase relative pl-8 md:pl-12" data-progress="95">
+                    <div class="story-phase relative pl-8 md:pl-12" data-progress="90">
                         <div class="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-zinc-700 border-4 border-paper"></div>
-                        <span class="text-xs font-bold text-zinc-700 tracking-widest uppercase block mb-1">Phase 10. 상실</span>
+                        <span class="text-xs font-bold text-zinc-700 tracking-widest uppercase block mb-1">Phase 09. 상실</span>
                         <h4 class="text-xl font-bold text-zinc-800 mb-3">남겨진 자들의 시간과 멈춰버린 방</h4>
                         <p class="text-zinc-600 text-sm leading-relaxed mb-4">다음 날 아침, 해변에 남겨진 유류품과 함께 두 사람의 죽음이 세상에 알려진다. 차가운 바다에서 인양된 두 사람은 경찰이 떼어내는 데 한참이나 시간이 걸렸을 정도로 서로를 단단히 끌어안은 채, 마치 기분 좋은 꿈을 꾸듯 편안하게 미소 짓고 있었다. 경찰의 연락을 받고 달려간 리쿠는 사망확인서를 통해 잔혹하고도 먹먹한 진실과 마주한다. 사요가 먼저 심정지로 세상을 떠났고, 유우는 사요의 심장이 멈춘 뒤에도 그녀를 절대 놓지 않아 결국 익사로 뒤따랐다는 사실을. 소식을 듣고 절망하는 렌과 묵묵히 슬픔을 삼키는 사쿠, 레이. 사요의 아파트를 정리하러 간 멤버들은 나란히 놓인 칫솔과 냉장고의 메모지, 그리고 버리지 않고 모아둔 유우의 팬레터 상자를 발견한다. 두 사람이 함께 살았던 일상의 온기가 너무나도 생생하게 남아있어, 남겨진 이들은 멈춰버린 방 안에서 깊은 상실감에 오열한다.</p>
                     </div>
                     <div class="story-phase relative pl-8 md:pl-12" data-progress="100">
                         <div class="absolute -left-[11px] top-1 w-5 h-5 rounded-full bg-gradient-to-r from-yeonji to-dahee border-4 border-paper"></div>
-                        <span class="text-xs font-bold text-zinc-800 tracking-widest uppercase block mb-1">Phase 11. 에필로그</span>
+                        <span class="text-xs font-bold text-zinc-800 tracking-widest uppercase block mb-1">Phase 10. 에필로그</span>
                         <h4 class="text-xl font-bold text-zinc-800 mb-3">여름비 내리는 장례식, 그리고 영원한 닻</h4>
                         <p class="text-zinc-600 text-sm leading-relaxed mb-4">여름비가 내리는 날 치러진 두 사람의 합동 장례식. 제단에는 카메라를 든 채 웃고 있는 사요와, 무대 위가 아닌 일상 속에서 편안하게 미소 짓는 유우의 영정이 나란히 놓였다. 리쿠는 백지가 된 추도사를 대신해 "제대로 행복했다면, 그걸로 됐습니다"라며 유우의 마지막을 온전히 인정해 준다. 사요의 어머니는 딸의 곁을 끝까지 지켜준 유우의 영정 앞에 깊이 고개를 숙이며 소리 없는 감사를 전하고, 레이는 "네가 고른 사람, 좋은 얼굴이더라"라며 마지막 인사를 건넨다. 거짓된 무대 위에서 방황하던 소년은 마침내 자신만의 유일한 세계를 찾아, 영원한 안식을 맞이했다.</p>
                     </div>
@@ -729,8 +725,6 @@
                     </div>
                 </div>
             </section>
-            
-            <!-- 카피라이트 푸터 삭제됨 (배경색과 자연스럽게 이어짐) -->
         </div>
     </div>
 
@@ -783,9 +777,9 @@
             bgmBtnUI.classList.remove('text-yeonji', 'border-yeonji/50', 'shadow-[0_0_20px_rgba(82,82,91,0.4)]');
             bgmBtnUI.classList.add('text-zinc-400', 'border-zinc-200');
 
-            // 뷰포트 동적 변경 (서사 페이지일 때만 1280px 강제, 나머지는 모바일 반응형)
+            // 뷰포트 동적 변경 (서사 페이지, 아카이브 메인 페이지일 때 1280px 강제)
             const viewportMeta = document.getElementById('viewport-meta');
-            if (pageId === 'narrative') {
+            if (pageId === 'narrative' || pageId === 'archive') {
                 viewportMeta.setAttribute('content', 'width=1280');
             } else {
                 viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0');
@@ -844,6 +838,14 @@
             
             if (activeEl && activeEl.id === targetId) return;
             isArchiveAnimating = true;
+
+            // 뷰포트 동적 변경 (아카이브 메인은 1280px 강제, 상세 페이지는 모바일 반응형 유지)
+            const viewportMeta = document.getElementById('viewport-meta');
+            if (targetId === 'view-main') {
+                viewportMeta.setAttribute('content', 'width=1280');
+            } else {
+                viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0');
+            }
 
             // 오디오 정지
             document.querySelectorAll('audio').forEach(audio => { audio.pause(); audio.currentTime = 0; });
