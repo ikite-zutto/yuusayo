@@ -8,9 +8,9 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- 폰트: 프로필용(Pretendard), 서사용(Noto Sans KR), 갤러리용(Noto Serif KR) 모두 로드 -->
+    <!-- 폰트: 프로필용(Pretendard), 서사용(Noto Sans KR), 갤러리용(Noto Serif KR), 카메라 메인 라벨용(Silkscreen) 모두 로드 -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@200;300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@200;300;400;500;700;900&family=Silkscreen&display=swap" rel="stylesheet">
     
     <script>
         tailwind.config = {
@@ -34,26 +34,83 @@
     
     <style>
         /* ==========================================
-           공통 & 랜딩 페이지 스타일
+           공통 스타일
         ========================================== */
-        body { background-color: #000; scroll-behavior: smooth; }
-        
-        .vf-corner { position: absolute; width: 30px; height: 30px; border: 1px solid rgba(255,255,255,0.6); }
-        .vf-tl { top: 50px; left: 50px; border-right: none; border-bottom: none; }
-        .vf-tr { top: 50px; right: 50px; border-left: none; border-bottom: none; }
-        .vf-bl { bottom: 50px; left: 50px; border-right: none; border-top: none; }
-        .vf-br { bottom: 50px; right: 50px; border-left: none; border-top: none; }
-        
-        @keyframes flash { 0% { opacity: 0; } 40% { opacity: 1; } 100% { opacity: 0; } }
-        .flash-active { animation: flash 1s ease-out forwards; }
-        
-        .nav-link { position: relative; display: inline-block; cursor: pointer; }
-        .nav-link::after {
-            content: ''; position: absolute; bottom: -6px; left: 0; width: 100%; height: 1px;
-            background-color: rgba(255, 255, 255, 0.8); transform: scaleX(0);
-            transform-origin: center; transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-        .nav-link:hover::after { transform: scaleX(1); }
+        body { background-color: #fff; scroll-behavior: smooth; }
+
+        /* ==========================================
+           [신규] 카메라 메인(랜딩) 스타일 — #cam-landing 안에서만 적용
+        ========================================== */
+#cam-landing{position:absolute;inset:0;display:grid;place-items:center;overflow:hidden;background:#fff;font-family:'Noto Sans KR',sans-serif;--h:100vh}
+.stage{position:relative;z-index:2;width:min(96vw,1000px,calc(var(--h)*.88*1000/830));aspect-ratio:1000/830;container-type:inline-size;
+  --silver:linear-gradient(165deg,#f6f6f7 0%,#cfd0d3 28%,#9b9da2 55%,#d9dadd 80%,#8f9197 100%)}
+.abs{position:absolute}
+#ascii{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:0;animation:fadein 1.6s .2s ease forwards}
+@keyframes fadein{to{opacity:1}}
+.ecg{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.ecg .base{fill:none;stroke:#e2e2e6;stroke-width:1.6;stroke-linejoin:round}
+.ecg .pulse{fill:none;stroke:#9a9aa1;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:130 870;animation:run 5s linear infinite;transition:stroke .3s,stroke-width .3s}
+.ecg.beat .pulse{stroke:#4a4a50;stroke-width:3.4}
+@keyframes run{from{stroke-dashoffset:1000}to{stroke-dashoffset:0}}
+/* ---- 카메라 본체 (레퍼런스 비율 580:360) ---- */
+.cam{position:absolute;z-index:2;left:5%;top:20%;width:85%;height:63.6%;border-radius:1.6cqw;
+  background:linear-gradient(115deg,transparent 38%,rgba(255,255,255,.35) 50%,rgba(255,255,255,.12) 58%,transparent 70%),var(--silver);
+  box-shadow:0 3cqw 5cqw -1.5cqw rgba(0,0,0,.35),0 .8cqw 2cqw rgba(0,0,0,.12),inset 0 0 0 .25cqw rgba(255,255,255,.85),inset 0 -1cqw 2cqw rgba(0,0,0,.2),inset 0 1cqw 1.5cqw rgba(255,255,255,.7)}
+.housing{left:37.4%;top:.8%;width:14.3%;height:18%;border-radius:.6cqw;background:linear-gradient(160deg,#cbccd0,#8d8f94);box-shadow:inset 0 0 0 .2cqw rgba(255,255,255,.6),inset 0 -.3cqw .6cqw rgba(0,0,0,.25)}
+.lens{left:15%;top:5%;width:70%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#8d9097,#2b2d31 45%,#0b0c0e 80%);box-shadow:0 0 0 .5cqw #aeb0b5,0 0 0 .7cqw #555}
+.lens::after{content:"";position:absolute;left:30%;top:24%;width:22%;height:18%;border-radius:50%;background:rgba(255,255,255,.55);filter:blur(.3cqw)}
+.dot{width:2cqw;height:2cqw;border-radius:50%;background:radial-gradient(circle at 35% 30%,#777,#222);box-shadow:inset 0 0 0 .2cqw #aaa}
+.grill{left:82%;top:28.5%;width:7.5%;height:6.5%;background:radial-gradient(circle,#555 .17cqw,transparent .22cqw) 0 0/.9cqw .9cqw}
+.shutter{left:67.6%;top:-4.2%;width:10%;height:4.7%;border-radius:.8cqw .8cqw 0 0;border:0;cursor:pointer;background:var(--silver);box-shadow:inset 0 0 0 .2cqw rgba(255,255,255,.8),0 -.3cqw .6cqw rgba(0,0,0,.25);transition:transform .12s}
+.shutter:active{transform:translateY(.4cqw)}
+.mode{left:65%;top:3.6%;width:14%;height:7%;border-radius:.6cqw;background:linear-gradient(#6c6e73,#3c3d41);box-shadow:inset 0 .2cqw .5cqw rgba(0,0,0,.6),0 0 0 .2cqw #d0d1d4;border:0;cursor:pointer}
+.knob{position:absolute;top:12%;left:3%;width:46%;height:76%;border-radius:.4cqw;background:var(--silver);transition:left .35s cubic-bezier(.3,1.4,.5,1);box-shadow:0 .2cqw .4cqw rgba(0,0,0,.5)}
+.mode.r .knob{left:51%}
+.mlab{top:11.4%;font-family:'Silkscreen',monospace;font-size:.85cqw;color:#55575c;letter-spacing:.1em}
+.btn{aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f2f2f3,#a3a5aa 60%,#7d7f85);box-shadow:inset 0 0 0 .2cqw rgba(255,255,255,.7),0 .2cqw .5cqw rgba(0,0,0,.35)}
+.btn::after{content:"";position:absolute;inset:26%;border-radius:50%;background:radial-gradient(circle at 40% 35%,#cfd1d5,#6f7177)}
+.dpad{left:66.4%;top:38.4%;width:25.9%;aspect-ratio:1;border-radius:50%;
+  background:conic-gradient(from 20deg,#f4f4f5,#9a9ca1,#e9eaec,#85878d,#f4f4f5,#9a9ca1,#e9eaec,#85878d,#f4f4f5);
+  box-shadow:0 0 0 .3cqw #7b7d82,0 0 0 .6cqw #e9e9eb,0 .6cqw 1.4cqw rgba(0,0,0,.4)}
+.ok{position:absolute;inset:32%;border-radius:50%;border:0;cursor:pointer;background:radial-gradient(circle at 35% 30%,#fafafa,#a6a8ad 55%,#707278);box-shadow:inset 0 0 0 .2cqw #fff,0 .3cqw .8cqw rgba(0,0,0,.4);font-size:1.3cqw;color:#55575c;font-weight:500;transition:transform .15s}
+.ok:active{transform:scale(.93)}
+.arr{position:absolute;width:30%;height:22%;border:0;background:none;cursor:pointer;color:#55575c;font-size:1.4cqw;left:35%}
+.arr.u{top:2%}.arr.d{bottom:2%}.arr:hover{color:#111}
+/* ---- LCD ---- */
+.lcdframe{left:.3%;top:18.9%;width:61.1%;height:81.1%;border-radius:1cqw;background:var(--silver);box-shadow:inset 0 0 0 .2cqw rgba(255,255,255,.8),0 .5cqw 1.2cqw rgba(0,0,0,.3)}
+.screen{position:absolute;inset:11% 8.8% 14.4% 8.8%;border-radius:.4cqw;overflow:hidden;background:linear-gradient(160deg,#3a3a3f,#0a0a0c);color:#fff;box-shadow:inset 0 0 0 .25cqw #3a3b3f,inset 0 0 3cqw rgba(0,0,0,.7)}
+.bg{position:absolute;left:-4%;top:-4%;width:108%;height:108%;object-fit:cover;max-width:none;filter:blur(14px) brightness(.5);transform:scale(1.15);transition:filter 1.3s ease,transform 1.3s ease}
+.screen.on .bg{filter:none;transform:scale(1)}
+.screen::after{content:"";position:absolute;inset:0;z-index:4;pointer-events:none;background:linear-gradient(115deg,rgba(255,255,255,.2) 0%,transparent 32%)}
+.flash{position:absolute;inset:0;background:#fff;opacity:0;z-index:9;pointer-events:none}
+.flash.go{animation:fl .9s ease-out}
+@keyframes fl{0%{opacity:0}25%{opacity:1}100%{opacity:0}}
+.vf{position:absolute;inset:5%;z-index:2;pointer-events:none}
+.vf i{position:absolute;width:3cqw;height:3cqw;border:.2cqw solid rgba(255,255,255,.85)}
+.vf i:nth-child(1){left:0;top:0;border-right:0;border-bottom:0}.vf i:nth-child(2){right:0;top:0;border-left:0;border-bottom:0}
+.vf i:nth-child(3){left:0;bottom:0;border-right:0;border-top:0}.vf i:nth-child(4){right:0;bottom:0;border-left:0;border-top:0}
+.hud{position:absolute;z-index:3;font-size:1.2cqw;letter-spacing:.18em;color:rgba(255,255,255,.9);font-weight:300;text-shadow:0 0 .6cqw rgba(0,0,0,.8)}
+.rec{left:8%;top:8%;display:flex;gap:.6cqw;align-items:center}.rec b{width:.9cqw;height:.9cqw;border-radius:50%;background:#ef4444;animation:bl 1.2s infinite}
+@keyframes bl{50%{opacity:.15}}
+.bat{right:8%;top:8%}.ev{left:8%;bottom:8%}.date{right:8%;bottom:8%}
+.view{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity .8s,transform .8s}
+.view.off{opacity:0;pointer-events:none;transform:translateY(1cqw)}
+.reticle{width:7cqw;height:7cqw;border:.15cqw dashed rgba(255,255,255,.8);border-radius:50%;display:grid;place-items:center;animation:spin 14s linear infinite;cursor:pointer}
+.reticle::after{content:"";width:.5cqw;height:.5cqw;background:#fff;border-radius:50%}
+@keyframes spin{to{transform:rotate(360deg)}}
+.standby p{margin-top:1.6cqw;font-size:1.2cqw;letter-spacing:.5em;color:rgba(255,255,255,.85);font-weight:300}
+#menu{justify-content:flex-end;padding-bottom:14%}
+#menu::before{content:"";position:absolute;inset:0;background:linear-gradient(transparent 50%,rgba(15,10,30,.72))}
+.menu{position:relative;display:flex;gap:3.5cqw}
+.item{position:relative;background:none;border:0;color:rgba(255,255,255,.7);font:inherit;cursor:pointer;padding:.9cqw 1.8cqw;transition:color .4s;text-shadow:0 0 .8cqw rgba(0,0,0,.8)}
+.item strong{display:block;font-weight:500;font-size:1.8cqw;letter-spacing:.35em;margin-right:-.35em}
+.item span{display:block;margin-top:.4cqw;font-size:1.05cqw;letter-spacing:.2em;font-weight:300}
+.item::before,.item::after{content:"";position:absolute;width:1cqw;height:1cqw;border:.15cqw solid #fff;opacity:0;transition:opacity .3s}
+.item::before{left:0;top:0;border-right:0;border-bottom:0}.item::after{right:0;bottom:0;border-left:0;border-top:0}
+.item.sel{color:#fff}.item.sel::before,.item.sel::after{opacity:1}
+.item:focus-visible{outline:1px solid #fff}
+.syr{position:absolute;z-index:3;left:85.5%;top:17%;width:11%;transform:rotate(-14deg);transform-origin:50% 60%;filter:drop-shadow(0 1cqw 1.2cqw rgba(0,0,0,.28));pointer-events:none}
+@media (prefers-reduced-motion:reduce){#cam-landing *{animation:none!important}}
 
         /* ==========================================
            아카이브 메인 (갤러리) 전용 스타일
@@ -170,48 +227,85 @@
 
 
     <!-- ==========================================
-         [페이지 0] 랜딩 화면 (하이브리드 셔터 연출)
+         [페이지 0] 랜딩 화면 (카메라 메인)
     =========================================== -->
-    <div id="page-landing" class="fixed inset-0 z-[100] flex flex-col items-center justify-center font-noto select-none bg-black transition-opacity duration-700 opacity-100">
-        <img src="https://imgur.com/YULm0M1.png" class="absolute inset-0 w-full h-full object-cover transition-all duration-[1.5s] ease-out scale-110" id="bg-image">
-        <div id="blur-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-xl transition-all duration-1000"></div>
+    <div id="page-landing" class="fixed inset-0 z-[100] bg-white transition-opacity duration-700 opacity-100">
+    <div id="cam-landing">
+<canvas id="ascii" aria-hidden="true"></canvas>
+<div class="stage">
+  <svg class="syr" viewBox="0 0 120 560" aria-hidden="true">
+    <defs>
+      <linearGradient id="syM" x1="0" x2="1"><stop offset="0" stop-color="#8e9096"/><stop offset=".35" stop-color="#f6f6f8"/><stop offset=".6" stop-color="#c3c4c9"/><stop offset="1" stop-color="#7d7f85"/></linearGradient>
+      <linearGradient id="syG" x1="0" x2="1"><stop offset="0" stop-color="#e2e3e7" stop-opacity=".95"/><stop offset=".25" stop-color="#fff" stop-opacity=".55"/><stop offset=".8" stop-color="#dcdde1" stop-opacity=".6"/><stop offset="1" stop-color="#b0b2b8" stop-opacity=".95"/></linearGradient>
+      <linearGradient id="syL" x1="0" x2="1"><stop offset="0" stop-color="#9aa0b0"/><stop offset=".3" stop-color="#d3d7e2"/><stop offset="1" stop-color="#8b91a2"/></linearGradient>
+      <linearGradient id="syR" x1="0" x2="1"><stop offset="0" stop-color="#26262a"/><stop offset=".4" stop-color="#707078"/><stop offset="1" stop-color="#1c1c20"/></linearGradient>
+    </defs>
+    <rect x="53" y="430" width="14" height="112" fill="url(#syM)"/><rect x="58" y="446" width="4" height="96" fill="#9a9ca1"/>
+    <path d="M60 0 L64 22 V134 H56 V22Z" fill="url(#syM)" stroke="#8e9096" stroke-width=".8"/><path d="M60 0 L57.5 22" stroke="#fff" stroke-width="1"/>
+    <path d="M48 134 H72 L76 170 H44Z" fill="url(#syG)" stroke="#b4b6bb"/>
+    <rect x="42" y="164" width="36" height="9" rx="3" fill="url(#syM)" stroke="#8e9096" stroke-width=".8"/>
+    <path d="M44 172 H76 L90 198 V440 Q90 446 84 446 H36 Q30 446 30 440 V198Z" fill="url(#syG)" stroke="#aeb0b6" stroke-width="1.2"/>
+    <path d="M34 216 Q60 210 86 216 V398 H34Z" fill="url(#syL)" opacity=".92"/><path d="M34 216 Q60 210 86 216" stroke="#fff" stroke-width="1.2" fill="none" opacity=".8"/>
+    <rect x="34" y="398" width="52" height="32" rx="4" fill="url(#syR)"/><path d="M34 406h52M34 414h52M34 422h52" stroke="#fff" stroke-opacity=".18"/>
+    <path d="M30 224h16M30 240h8M30 256h8M30 272h8M30 288h8M30 304h16M30 320h8M30 336h8M30 352h8M30 368h8M30 384h16" stroke="#44464b" stroke-width="1.3"/>
+    <rect x="38" y="204" width="6" height="232" rx="3" fill="#fff" opacity=".6"/><rect x="82" y="204" width="3" height="232" fill="#fff" opacity=".25"/>
+    <rect x="10" y="444" width="100" height="14" rx="7" fill="url(#syM)" stroke="#8e9096" stroke-width=".8"/><path d="M18 448h84" stroke="#fff" stroke-width="1.2" opacity=".8"/>
+    <rect x="30" y="540" width="60" height="14" rx="7" fill="url(#syM)" stroke="#8e9096" stroke-width=".8"/><path d="M38 544h44" stroke="#fff" stroke-width="1.2" opacity=".8"/>
+  </svg>
 
-        <div id="viewfinder-ui" class="absolute inset-0 pointer-events-none transition-opacity duration-700 z-10">
-            <div class="vf-corner vf-tl"></div><div class="vf-corner vf-tr"></div>
-            <div class="vf-corner vf-bl"></div><div class="vf-corner vf-br"></div>
-            <div class="absolute top-12 left-1/2 -translate-x-1/2 flex gap-6 text-[10px] font-mono text-white/60 tracking-widest">
-                <span class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div> REC</span>
-                <span>ISO 400</span><span>F 1.8</span>
-            </div>
+  <svg class="ecg" id="ecg" viewBox="0 0 1000 830" aria-hidden="true">
+    <path class="base" d="M0 782H320L336 782L346 762L356 802L368 730L380 812L392 782H580L596 782L606 764L616 800L628 738L640 810L652 782H820L836 782L846 764L856 800L868 744L880 810L892 782H1000"/>
+    <path class="pulse" pathLength="1000" d="M0 782H320L336 782L346 762L356 802L368 730L380 812L392 782H580L596 782L606 764L616 800L628 738L640 810L652 782H820L836 782L846 764L856 800L868 744L880 810L892 782H1000"/>
+  </svg>
+
+  <div class="cam">
+    <div class="abs housing"><div class="abs lens"></div></div>
+    <div class="abs dot" style="left:52.8%;top:4.2%"></div><div class="abs dot" style="left:52.8%;top:12%"></div>
+    <div class="abs grill"></div>
+
+    <button class="abs shutter" id="shutter" aria-label="셔터"></button>
+    <button class="abs mode" id="mode" aria-label="아카이브 / 서사 전환"><div class="knob"></div></button>
+    <span class="abs mlab" style="left:65.8%">ARC</span>
+    <span class="abs mlab" style="left:73.5%">NAR</span>
+
+    <div class="abs lcdframe">
+      <div class="screen" id="screen">
+        <img class="bg" id="shot" src="https://imgur.com/YULm0M1.png" referrerpolicy="no-referrer" alt="" onerror="this.onerror=null;this.src=this.src.replace('//imgur.com/','//i.imgur.com/')">
+        <div class="vf"><i></i><i></i><i></i><i></i></div>
+        <div class="hud rec"><b></b>REC</div>
+        <div class="hud bat">▮▮▮ ISO 400</div>
+        <div class="hud ev">F1.8</div>
+        <div class="hud date">2025.07.12 22:00</div>
+        <div class="view standby" id="standby">
+          <div class="reticle" id="reticle" role="button" aria-label="포커스"></div>
+          <p>FOCUS</p>
         </div>
-
-        <button id="shutter-btn" class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center gap-4 group z-20 outline-none">
-            <div class="w-16 h-16 rounded-full flex items-center justify-center transition-all duration-500 group-hover:scale-110 relative">
-                <div class="absolute inset-0 border border-white/30 rounded-full group-hover:border-white/60 transition-colors duration-500"></div>
-                <div class="w-12 h-12 border border-dashed border-white/40 rounded-full group-hover:rotate-90 transition-all duration-700"></div>
-                <div class="absolute w-1 h-1 bg-white/80 rounded-full group-hover:bg-white transition-colors"></div>
-            </div>
-            <span class="text-[10px] tracking-[0.4em] font-light text-white/50 group-hover:text-white/90 transition-colors duration-500 uppercase">Focus</span>
-        </button>
-
-        <div id="flash-screen" class="absolute inset-0 bg-white opacity-0 pointer-events-none z-30"></div>
-
-        <div id="menu-panel" class="absolute inset-0 flex flex-col items-center justify-center opacity-0 pointer-events-none transition-all duration-[1.2s] z-20">
-            <div class="text-center mb-16 drop-shadow-2xl translate-y-4 transition-transform duration-[1.2s] ease-out" id="menu-title">
-                <span class="text-[10px] font-medium tracking-[0.6em] text-white/70 block mb-4 uppercase">君という猶予</span>
-                <h1 class="text-4xl md:text-5xl font-light text-white tracking-tight">너라는 유예</h1>
-            </div>
-            <div class="flex items-center gap-6 md:gap-16 translate-y-4 transition-transform duration-[1.2s] ease-out delay-100" id="menu-links">
-                <button onclick="goToPage('archive')" class="nav-link text-xs md:text-sm font-light tracking-[0.3em] text-white/90 hover:text-white transition-colors outline-none">
-                    A R C H I V E
-                </button>
-                <div class="w-px h-8 bg-white/20"></div>
-                <button onclick="goToPage('narrative')" class="nav-link text-xs md:text-sm font-light tracking-[0.3em] text-white/90 hover:text-white transition-colors outline-none">
-                    N A R R A T I V E
-                </button>
-            </div>
+        <div class="view off" id="menu">
+          <div class="menu">
+            <button class="item sel" data-page="archive"><strong>ARCHIVE</strong><span>아카이브</span></button>
+            <button class="item" data-page="narrative"><strong>NARRATIVE</strong><span>서사</span></button>
+          </div>
         </div>
+        <div class="flash" id="flash"></div>
+      </div>
     </div>
+
+    <div class="abs btn" style="left:66.7%;top:24.5%;width:8.6%"></div>
+    <div class="abs btn" style="left:66.7%;top:78.3%;width:8.6%"></div>
+    <div class="abs btn" style="left:85.5%;top:79.4%;width:7.2%"></div>
+
+    <div class="abs dpad">
+      <button class="arr u" id="up" aria-label="위">▲</button>
+      <button class="arr d" id="down" aria-label="아래">▼</button>
+      <button class="ok" id="ok">OK</button>
+    </div>
+
+
+  </div>
+</div>
+    </div>
+    </div>
+
 
 
     <!-- ==========================================
@@ -806,39 +900,111 @@
 
 
     <!-- ==========================================
+         [스크립트] 카메라 메인 로직 (신규)
+    =========================================== -->
+    <script>
+(function(){
+const $=id=>document.getElementById(id);
+const items=[...document.querySelectorAll('.item')];
+let on=false, sel=0;
+function render(){items.forEach((el,i)=>el.classList.toggle('sel',i===sel));$('mode').classList.toggle('r',sel===1)}
+function flash(){
+  const f=$('flash');f.classList.remove('go');void f.offsetWidth;f.classList.add('go');
+  const e=$('ecg');e.classList.add('beat');setTimeout(()=>e.classList.remove('beat'),900);
+}
+function powerOn(){
+  if(on)return; on=true; flash();
+  setTimeout(()=>{$('standby').classList.add('off');$('menu').classList.remove('off');$('screen').classList.add('on')},150);
+}
+function move(d){if(!on){powerOn();return} sel=(sel+d+items.length)%items.length;render()}
+function enter(){
+  if(!on){powerOn();return}
+  const page=items[sel].dataset.page; flash();
+  setTimeout(()=>{
+    window.goToPage(page);
+  },450);
+}
+$('shutter').onclick=()=>on?enter():powerOn();
+$('reticle').onclick=powerOn;
+$('up').onclick=()=>move(-1);$('down').onclick=()=>move(1);
+$('ok').onclick=enter;
+$('mode').onclick=()=>{if(!on){powerOn();return}move(1)};
+items.forEach((el,i)=>{el.onmouseenter=()=>{sel=i;render()};el.onclick=()=>{sel=i;render();enter()}});
+addEventListener('keydown',e=>{
+  const lp=document.getElementById('page-landing');if(lp.classList.contains('hidden')||lp.style.opacity==='0')return;
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')move(-1);
+  else if(e.key==='ArrowRight'||e.key==='ArrowDown')move(1);
+  else if(e.key==='Enter'||e.key===' '){e.preventDefault();enter()}
+});
+render();
+/* 메인으로 돌아올 때 카메라를 처음 상태(FOCUS)로 되돌림 */
+function resetCamera(){on=false;sel=0;render();$('standby').classList.remove('off');$('menu').classList.add('off');$('screen').classList.remove('on')}
+
+
+window.resetCamera=resetCamera;
+})();
+/* ===== ASCII(점자) 아트 배경: 도형을 그려서 문자로 변환 ===== */
+(function(){
+const cv=document.getElementById('ascii'),cg=cv.getContext('2d');
+const RAMP=['','⠁','⠃','⠇','⡇','⣇','⣧','⣷','⣿'];
+function star(g,x,y,R,r,rot){g.beginPath();for(let i=0;i<10;i++){const a=rot+i*Math.PI/5-Math.PI/2,q=i%2?r:R;g[i?'lineTo':'moveTo'](x+Math.cos(a)*q,y+Math.sin(a)*q)}g.closePath()}
+function spark(g,x,y,R){g.beginPath();g.moveTo(x,y-R);g.quadraticCurveTo(x,y,x+R,y);g.quadraticCurveTo(x,y,x,y+R);g.quadraticCurveTo(x,y,x-R,y);g.quadraticCurveTo(x,y,x,y-R);g.closePath()}
+function heart(g,x,y,s){g.beginPath();g.moveTo(x,y+s*.9);g.bezierCurveTo(x-s*1.3,y+s*.1,x-s*.7,y-s*.9,x,y-s*.3);g.bezierCurveTo(x+s*.7,y-s*.9,x+s*1.3,y+s*.1,x,y+s*.9);g.closePath()}
+function heartA(g,x,y,s,rot){g.save();g.translate(x,y);g.rotate(rot);g.scale(s,s);g.lineCap='round';g.lineJoin='round';
+ const st=(w,d)=>{g.lineWidth=w;g.strokeStyle='#4c4c4c';g.beginPath();g.moveTo(d[0],d[1]);g.bezierCurveTo(d[2],d[3],d[4],d[5],d[6],d[7]);g.stroke()};
+ st(.3,[.05,-.5,0,-1,.15,-1.4,.5,-1.35]);st(.3,[.5,-1.35,.85,-1.3,.85,-.9,.78,-.5]);            /* 대동맥궁 */
+ st(.1,[.18,-1.32,.15,-1.5,.12,-1.65,.1,-1.7]);st(.1,[.33,-1.4,.33,-1.55,.34,-1.7,.34,-1.75]);st(.1,[.47,-1.36,.5,-1.5,.55,-1.62,.6,-1.68]);
+ st(.24,[.4,-.5,.6,-.95,.95,-1,1.2,-.8]);                                                         /* 폐동맥 */
+ st(.22,[-.45,-.5,-.5,-.95,-.5,-1.3,-.45,-1.6]);                                                  /* 상대정맥 */
+ st(.2,[-.5,.3,-.65,.55,-.7,.75,-.62,.95]);                                                      /* 하대정맥 */
+ {const q=g.createRadialGradient(-.25,-.05,.05,0,.2,1.15);q.addColorStop(0,'#c4c4c4');q.addColorStop(.55,'#707070');q.addColorStop(1,'#3a3a3a');g.fillStyle=q}g.beginPath();g.moveTo(-.75,-.35);g.bezierCurveTo(-.95,.3,-.45,.9,-.1,1.2);g.bezierCurveTo(.5,.85,.98,.4,.92,-.2);
+ g.bezierCurveTo(.86,-.58,.4,-.72,.1,-.6);g.bezierCurveTo(-.2,-.76,-.6,-.7,-.75,-.35);g.closePath();g.fill();
+ g.fillStyle='#8e8e8e';g.beginPath();g.ellipse(-.52,-.42,.33,.3,-.3,0,7);g.fill();g.beginPath();g.ellipse(.6,-.5,.3,.22,.5,0,7);g.fill();   /* 심방 */
+ g.strokeStyle='#fff';g.lineWidth=.09;
+ [[-.8,-.15,-.3,.05,.3,-.12,.9,-.2],[.05,-.3,0,.35,-.04,.8,-.1,1.15],[.62,-.05,.72,.3,.5,.72,.22,.98],[-.35,.05,-.3,.4,-.2,.7,-.12,.95]].forEach(d=>{g.beginPath();g.moveTo(d[0],d[1]);g.bezierCurveTo(d[2],d[3],d[4],d[5],d[6],d[7]);g.stroke()});
+ g.restore()}
+function bow(g,x,y,s,rot){g.save();g.translate(x,y);g.rotate(rot);
+ g.fillStyle='#4a4a4a';
+ [-1,1].forEach(d=>{g.beginPath();g.moveTo(0,0);g.bezierCurveTo(d*.4*s,-.85*s,d*1.35*s,-.65*s,d*1.3*s,.05*s);g.bezierCurveTo(d*1.2*s,.75*s,d*.4*s,.5*s,0,0);g.fill()});
+ g.beginPath();g.moveTo(-.12*s,.1*s);g.lineTo(-.6*s,1.3*s);g.lineTo(-.28*s,1.08*s);g.lineTo(-.05*s,1.4*s);g.lineTo(.12*s,.1*s);g.fill();
+ g.beginPath();g.moveTo(.06*s,.1*s);g.lineTo(.5*s,1.2*s);g.lineTo(.22*s,1.02*s);g.lineTo(.08*s,1.3*s);g.closePath();g.fill();
+ g.strokeStyle='#fff';g.lineWidth=s*.07;g.lineCap='round';
+ [-1,1].forEach(d=>{g.beginPath();g.moveTo(d*.2*s,-.05*s);g.quadraticCurveTo(d*.7*s,-.45*s,d*1.1*s,-.2*s);g.stroke();g.beginPath();g.moveTo(d*.25*s,.15*s);g.quadraticCurveTo(d*.7*s,.3*s,d*1.05*s,.25*s);g.stroke()});
+ g.fillStyle='#222';g.beginPath();g.ellipse(0,.02*s,.2*s,.26*s,0,0,7);g.fill();g.restore()}
+function fuzzy(g,x,y,R,rot,pts){g.save();star(g,x,y,R,R*(pts||.5),rot);g.clip();const gr=g.createRadialGradient(x,y,0,x,y,R);gr.addColorStop(0,'#444');gr.addColorStop(.55,'#888');gr.addColorStop(1,'#fff');g.fillStyle=gr;g.fillRect(x-R,y-R,R*2,R*2);g.restore()}
+function outlined(g,x,y,R,rot){star(g,x,y,R,R*.45,rot);g.fillStyle='#666';g.fill();star(g,x,y,R*.76,R*.34,rot);g.fillStyle='#fff';g.fill();star(g,x,y,R*.5,R*.22,rot);g.fillStyle='#8a8a8a';g.fill()}
+function draw(){
+ const W=cv.parentElement.clientWidth,H=cv.parentElement.clientHeight,dpr=Math.min(devicePixelRatio||1,2),u=Math.min(W,H),c=Math.max(5,Math.min(8,W/165)),ch=c*1.8;
+ const cols=Math.ceil(W/c),rows=Math.ceil(H/ch);
+ const o=document.createElement('canvas');o.width=cols;o.height=rows;const g=o.getContext('2d',{willReadFrequently:true});
+ g.fillStyle='#fff';g.fillRect(0,0,cols,rows);g.setTransform(1/c,0,0,1/ch,0,0);
+ const P=W<H*.9,H1=(x,y,z,f)=>{heart(g,W*x,H*y,u*z);g.fillStyle='#707070';g.fill();heart(g,W*x,H*y,u*z*.6);g.fillStyle='#fff';g.fill()};
+ let sp;
+ if(!P){
+  H1(.1,.5,.11);
+  heartA(g,W*.885,H*.44,u*.13,-.25);
+  sp=[[.07,.2,.025],[.95,.72,.02]];
+ }else{
+  H1(.7,.26,.13);
+  heartA(g,W*.27,H*.8,u*.17,-.25);
+  sp=[[.2,.09,.03],[.86,.92,.025]];
+ }
+ sp.forEach(a=>{spark(g,W*a[0],H*a[1],u*a[2]);g.fillStyle='#555';g.fill()});
+ const d=g.getImageData(0,0,cols,rows).data;
+ cv.width=W*dpr;cv.height=H*dpr;cg.setTransform(dpr,0,0,dpr,0,0);cg.clearRect(0,0,W,H);
+ cg.font=(c*1.75)+'px "DejaVu Sans Mono",Menlo,"Segoe UI Symbol",monospace';cg.textAlign='center';cg.textBaseline='middle';cg.fillStyle='rgba(80,82,94,.72)';
+ for(let y=0;y<rows;y++)for(let x=0;x<cols;x++){const k=Math.round(Math.pow(1-d[(y*cols+x)*4]/255,.6)*(RAMP.length-1));if(k>0)cg.fillText(RAMP[k],(x+.5)*c,(y+.5)*ch)}
+}
+let t;addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(draw,150)});draw();
+})();
+
+    </script>
+
+    <!-- ==========================================
          [스크립트] 전체 로직 제어
     =========================================== -->
     <script>
-        // 1. 랜딩 화면 셔터 연출
-        const shutterBtn = document.getElementById('shutter-btn');
-        const blurOverlay = document.getElementById('blur-overlay');
-        const bgImage = document.getElementById('bg-image');
-        const flashScreen = document.getElementById('flash-screen');
-        const menuPanel = document.getElementById('menu-panel');
-        const viewfinderUi = document.getElementById('viewfinder-ui');
-        const menuTitle = document.getElementById('menu-title');
-        const menuLinks = document.getElementById('menu-links');
-
-        shutterBtn.addEventListener('click', () => {
-            flashScreen.classList.add('flash-active');
-            shutterBtn.style.opacity = '0';
-            shutterBtn.style.pointerEvents = 'none';
-
-            setTimeout(() => {
-                blurOverlay.classList.remove('bg-black/60', 'backdrop-blur-xl');
-                blurOverlay.classList.add('bg-black/30');
-                bgImage.classList.remove('scale-110');
-                bgImage.classList.add('scale-100');
-                viewfinderUi.style.opacity = '0';
-                
-                menuPanel.style.opacity = '1';
-                menuPanel.style.pointerEvents = 'auto';
-                menuTitle.classList.remove('translate-y-4');
-                menuLinks.classList.remove('translate-y-4');
-            }, 150);
-        });
-
-        // 2. 페이지(앱) 간 이동 로직 (뷰포트 동적 변경 포함)
+        // 1. 페이지(앱) 간 이동 로직 (뷰포트 동적 변경 포함)
         function goToPage(pageId) {
             // 모든 오디오 정지
             document.querySelectorAll('audio').forEach(audio => {
@@ -852,6 +1018,9 @@
             const bgmBtnUI = document.getElementById('bgmBtn');
             bgmBtnUI.classList.remove('text-yeonji', 'border-yeonji/50', 'shadow-[0_0_20px_rgba(82,82,91,0.4)]');
             bgmBtnUI.classList.add('text-zinc-400', 'border-zinc-200');
+
+            // 메인(카메라)으로 돌아오면 카메라를 처음 상태(FOCUS)로 되돌림
+            if (pageId === 'landing' && typeof resetCamera === 'function') resetCamera();
 
             // 뷰포트 동적 변경 (서사 페이지, 아카이브 메인 페이지일 때 1280px 강제)
             const viewportMeta = document.getElementById('viewport-meta');
@@ -904,7 +1073,7 @@
             }
         }
 
-        // 3. 아카이브(프로필) 내부 뷰 전환 로직
+        // 2. 아카이브(프로필) 내부 뷰 전환 로직
         let isArchiveAnimating = false;
         function switchArchiveView(targetId) {
             if (isArchiveAnimating) return;
@@ -951,7 +1120,7 @@
             }
         }
 
-        // 4. 프로필 테마 BGM 제어
+        // 3. 프로필 테마 BGM 제어
         function toggleAudio(charId) {
             const targetAudio = document.getElementById('audio-' + charId);
             const targetPlayer = document.getElementById('player-' + charId);
@@ -966,7 +1135,7 @@
             }
         }
 
-        // 5. 프로필 코멘트 토글 로직
+        // 4. 프로필 코멘트 토글 로직
         function toggleComment(contentId, iconId) {
             const content = document.getElementById(contentId);
             const icon = document.getElementById(iconId);
@@ -980,7 +1149,7 @@
             }
         }
 
-        // 6. 서사 페이지 메인 BGM 제어
+        // 5. 서사 페이지 메인 BGM 제어
         const bgmBtn = document.getElementById('bgmBtn');
         const audioStory = document.getElementById('audio-narrative');
         let isStoryPlaying = false;
