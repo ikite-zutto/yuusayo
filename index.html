@@ -8,7 +8,7 @@
     
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- 폰트: 프로필용/서사용(Pretendard), 갤러리용(Noto Serif KR), 카메라 메인 라벨용(Silkscreen), 아카이브용(Noto Sans JP) 모두 로드 -->
+    <!-- 폰트: 프로필/서사용(Pretendard), 갤러리용(Noto Serif KR), 카메라/아카이브 메인용(Silkscreen, Noto Sans JP/KR) 모두 로드 -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Noto+Sans+KR:wght@200;300;400;500;700;900&family=Noto+Sans+JP:wght@200;300;400&family=Silkscreen&display=swap" rel="stylesheet">
     
@@ -36,7 +36,7 @@
         /* ==========================================
            공통 스타일
         ========================================== */
-        body { background-color: #fff; scroll-behavior: smooth; }
+        body { background-color: #fff; scroll-behavior: smooth; font-family: 'Pretendard Variable', Pretendard, sans-serif; }
 
         /* ==========================================
            카메라 메인(랜딩) 스타일 — #cam-landing 안에서만 적용 (절대 건드리지 않음)
@@ -113,7 +113,7 @@
         /* ==========================================
            아카이브 메인 전용 스타일 (클래스 충돌 방지 적용)
         ========================================== */
-        #view-main-content { position:absolute; inset:0; display:grid; place-items:center; overflow:hidden; background:#fff; font-family:'Noto Sans JP','Pretendard',sans-serif; --h:100vh; width: 100%; height: 100%; }
+        #view-main-content { position:absolute; inset:0; display:grid; place-items:center; overflow:hidden; background:#fff; font-family:'Noto Sans JP','Noto Sans KR',sans-serif; --h:100vh; width: 100%; height: 100%; }
         @keyframes arc-fadein { to { opacity:1; } }
         .arc-stage { position:relative; z-index:2; width:min(96vw,1000px,calc(var(--h)*.9*1000/620)); aspect-ratio:1000/620; container-type:inline-size; --silver:linear-gradient(165deg,#f6f6f7 0%,#cfd0d3 28%,#9b9da2 55%,#d9dadd 80%,#8f9197 100%); }
         .arc-px { font-family:'Silkscreen',monospace; }
@@ -128,14 +128,6 @@
         #arc-bg .arc-lb { position:absolute; font-size:clamp(7px,1.1vmin,10px); letter-spacing:.22em; color:#b0b0b8; }
         #arc-bg .arc-l1 { left:calc(2.2vmin + 40px); top:calc(2.2vmin + 2px); }
         #arc-bg .arc-l2 { right:calc(2.2vmin + 40px); bottom:calc(2.2vmin + 2px); }
-        #arc-bg .arc-ch { position:absolute; display:block; filter:drop-shadow(0 1.2vmin 1.2vmin rgba(0,0,0,.16)); animation:arc-flt 7s ease-in-out infinite; }
-        @keyframes arc-flt { 0%,100% { transform:translateY(0) rotate(0); } 50% { transform:translateY(-1.6vmin) rotate(6deg); } }
-        .arc-c1 { left:3%; top:13%; width:10vmin; height:10vmin; }
-        .arc-c2 { left:15%; top:5%; width:4.4vmin; height:4.4vmin; animation-delay:-2s!important; }
-        .arc-c3 { right:4%; top:60%; width:8vmin; height:8vmin; animation-delay:-3.5s!important; }
-        .arc-c4 { right:6%; top:15%; width:9vmin; height:9vmin; animation-delay:-1s!important; }
-        .arc-c5 { left:4%; bottom:12%; width:6vmin; height:6vmin; animation-delay:-4.5s!important; }
-        .arc-c6 { right:19%; bottom:5%; width:4vmin; height:4vmin; animation-delay:-5.5s!important; }
         .arc-ecg { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; overflow:visible; }
         .arc-ecg .arc-base { fill:none; stroke:#dcdce0; stroke-width:1.6; stroke-linejoin:round; }
         .arc-ecg .arc-pulse { fill:none; stroke:#8f8f96; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round; stroke-dasharray:14 200; animation:arc-run 3.2s linear infinite; }
@@ -150,9 +142,9 @@
         .arc-frame:hover, .arc-frame:focus-visible { transform:translateY(-.8cqw); outline:none; }
         .arc-f1 { left:9%; } .arc-f2 { left:57%; }
         .arc-scr { position:absolute; left:6%; right:6%; top:4.5%; bottom:19%; border-radius:.4cqw; overflow:hidden; background:linear-gradient(160deg,#3a3a3f,#0a0a0c); box-shadow:inset 0 0 0 .25cqw #3a3b3f,inset 0 0 2.5cqw rgba(0,0,0,.6); }
-        .arc-scr img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:blur(2.5px) saturate(.92); transform:scale(1); transition:filter .9s ease,transform .9s ease; }
-        .arc-frame:hover .arc-scr img, .arc-frame:focus-visible .arc-scr img { filter:none; transform:scale(1.07); }
-        @media (hover:none) { .arc-scr img { filter:none; } }
+        /* 블러 제거, 노이즈 유지 */
+        .arc-scr img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; filter:saturate(.92); transform:scale(1); transition:transform .9s ease; }
+        .arc-frame:hover .arc-scr img, .arc-frame:focus-visible .arc-scr img { transform:scale(1.07); }
         .arc-scr::before { content:""; position:absolute; inset:-12%; z-index:2; pointer-events:none; opacity:.17; mix-blend-mode:overlay; transition:opacity .9s ease; background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.95' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>"); animation:arc-grain .7s steps(1) infinite; }
         .arc-frame:hover .arc-scr::before, .arc-frame:focus-visible .arc-scr::before { opacity:.09; }
         @keyframes arc-grain { 0% { transform:translate(0,0); } 20% { transform:translate(-4%,3%); } 40% { transform:translate(3%,-4%); } 60% { transform:translate(-2%,-3%); } 80% { transform:translate(4%,2%); } }
@@ -181,11 +173,11 @@
         .arc-home:active { transform:translateX(-50%) translateY(.2cqw); }
 
         /* ==========================================
-           서사 페이지 Y2K 리디자인 - B안 (폰트 통일 및 사진 비율 수정)
+           서사 페이지 Y2K 리디자인 - B안 (폰트 완전 통일 및 사진 비율 수정)
         ========================================== */
-        #page-narrative { background: #fff; color: #3f3f46; }
-        /* .y2k-px 클래스에만 픽셀 폰트 적용, 나머지는 부모의 font-sans(Pretendard) 상속 */
-        #page-narrative .y2k-px { font-family: 'Silkscreen', monospace; }
+        #page-narrative { background: #fff; color: #3f3f46; font-family: 'Pretendard Variable', Pretendard, sans-serif; }
+        /* 서사 페이지 내의 픽셀 폰트 제거, 부모 폰트(Pretendard) 상속 */
+        #page-narrative .y2k-px { font-weight: 600; letter-spacing: 0.05em; font-family: 'Pretendard Variable', Pretendard, sans-serif; }
         #page-narrative .y2k-silver { background: linear-gradient(165deg,#f6f6f7 0%,#cfd0d3 28%,#9b9da2 55%,#d9dadd 80%,#8f9197 100%); }
         #page-narrative .y2k-wrap { position: relative; z-index: 1; max-width: 1000px; margin: 0 auto; }
         #page-narrative h2, #page-narrative h3, #page-narrative h4, #page-narrative p, #page-narrative figure { margin: 0; }
@@ -251,7 +243,8 @@
 
         /* 프로필 카드 */
         #page-narrative .y2k-profiles { display: grid; grid-auto-rows: 1fr; gap: 40px; }
-        #page-narrative .y2k-card { display: flex; min-height: 400px; border: 1px solid #c9cacd; background: #fff; }
+        /* height: 100% 추가하여 두 카드의 높이가 완벽히 동일해지도록 강제 (사진 비율 맞춤) */
+        #page-narrative .y2k-card { display: flex; height: 100%; min-height: 400px; border: 1px solid #c9cacd; background: #fff; }
         #page-narrative .y2k-card.is-reverse { flex-direction: row-reverse; }
         /* 사진 영역 너비 320px 고정, 이미지 꽉 차게 */
         #page-narrative .y2k-photo { position: relative; width: 320px; flex-shrink: 0; background: #e4e4e7; }
@@ -271,7 +264,6 @@
         #page-narrative .y2k-calls .names .b { font-weight: 700; color: #27272a; }
         #page-narrative .y2k-desc { margin-top: 16px; font-size: 14px; font-weight: 300; line-height: 1.85; color: #3f3f46; }
         #page-narrative .y2k-desc::first-letter { font-size: 1.6em; font-weight: 500; color: #27272a; }
-        #page-narrative .y2k-quote { word-break: keep-all; text-wrap: balance; margin-top: 0; padding-top: 22px; font-size: 20px; font-weight: 400; font-style: italic; line-height: 1.55; letter-spacing: -.01em; color: #27272a; }
 
         /* 서사 타임라인 */
         #page-narrative .y2k-sechead { display: flex; align-items: flex-end; justify-content: space-between; padding-bottom: 16px; border-bottom: 2px solid #52525b; margin-bottom: 12px; }
@@ -279,7 +271,7 @@
         #page-narrative .y2k-sechead p { font-size: 14px; font-weight: 300; color: #52525b; }
         #page-narrative .y2k-sechead .tag { font-size: 11px; letter-spacing: .2em; color: #6b6e75; }
         #page-narrative .y2k-phase-body { display: flex; gap: 28px; padding: 30px 0 26px; }
-        #page-narrative .y2k-num { width: 96px; flex-shrink: 0; font-size: 54px; line-height: 1; color: #a1a1aa; }
+        #page-narrative .y2k-num { width: 96px; flex-shrink: 0; font-size: 54px; line-height: 1; color: #a1a1aa; font-weight: 700; }
         #page-narrative .y2k-phase.is-late .y2k-num { color: #d9dadd; }
         #page-narrative .y2k-phase-text { flex: 1; min-width: 0; }
         #page-narrative .y2k-meta { display: flex; justify-content: space-between; align-items: baseline; font-size: 11px; letter-spacing: .14em; color: #6b6e75; }
@@ -340,7 +332,7 @@
     </style>
 </head>
 <!-- 초기에는 스크롤을 막아둠 (랜딩 페이지용) -->
-<body class="overflow-hidden relative font-sans">
+<body class="overflow-hidden relative">
 
     <!-- 오디오 소스 -->
     <audio id="audio-narrative" src="bgm1.mp3" loop preload="none"></audio>
@@ -433,7 +425,7 @@
     =========================================== -->
     <div id="page-archive" class="hidden fixed inset-0 z-[90] bg-white text-gray-800 antialiased font-sans overflow-hidden transition-opacity duration-700 opacity-0">
         
-        <!-- 아카이브 메인 뷰 (신규 교체) -->
+        <!-- 아카이브 메인 뷰 -->
         <div id="view-main" class="view-section absolute inset-0 flex items-center justify-center transition-all duration-700 opacity-100 z-10 bg-white overflow-hidden">
             <div id="view-main-content">
                 <!-- 크롬 그라데이션 정의 (공용) -->
@@ -450,13 +442,6 @@
                   <div class="arc-grid"></div>
                   <i class="arc-bk"></i><i class="arc-bk"></i><i class="arc-bk"></i><i class="arc-bk"></i>
                   <span class="arc-lb arc-px arc-l1">AF·S</span><span class="arc-lb arc-px arc-l2">F2.8 1/125</span>
-
-                  <svg class="arc-ch arc-c1" viewBox="0 0 100 100"><path d="M50 0C54 32 68 46 100 50C68 54 54 68 50 100C46 68 32 54 0 50C32 46 46 32 50 0Z" fill="url(#chrome)" stroke="#fff" stroke-opacity=".7" stroke-width="1"/></svg>
-                  <svg class="arc-ch arc-c2" viewBox="0 0 100 100"><path d="M50 0C54 32 68 46 100 50C68 54 54 68 50 100C46 68 32 54 0 50C32 46 46 32 50 0Z" fill="url(#chrome)" stroke="#fff" stroke-opacity=".7" stroke-width="1.5"/></svg>
-                  <svg class="arc-ch arc-c3" viewBox="0 0 100 100"><path d="M50 4C50 4 18 44 18 64A32 32 0 0 0 82 64C82 44 50 4 50 4Z" fill="url(#chrome)" stroke="#fff" stroke-opacity=".7" stroke-width="1.2"/><ellipse cx="40" cy="62" rx="6" ry="12" fill="#fff" fill-opacity=".7" transform="rotate(14 40 62)"/></svg>
-                  <svg class="arc-ch arc-c4" viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="none" stroke="url(#chrome)" stroke-width="14"/><circle cx="50" cy="50" r="44.5" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="1"/><circle cx="50" cy="50" r="31.5" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1"/></svg>
-                  <svg class="arc-ch arc-c5" viewBox="0 0 100 100"><path d="M50 4C50 4 18 44 18 64A32 32 0 0 0 82 64C82 44 50 4 50 4Z" fill="url(#chrome)" stroke="#fff" stroke-opacity=".7" stroke-width="1.2"/><ellipse cx="40" cy="62" rx="6" ry="12" fill="#fff" fill-opacity=".7" transform="rotate(14 40 62)"/></svg>
-                  <svg class="arc-ch arc-c6" viewBox="0 0 100 100"><path d="M50 0C54 32 68 46 100 50C68 54 54 68 50 100C46 68 32 54 0 50C32 46 46 32 50 0Z" fill="url(#chrome)" stroke="#fff" stroke-opacity=".7" stroke-width="2"/></svg>
                 </div>
 
                 <div class="arc-stage">
@@ -478,7 +463,7 @@
                     <g transform="translate(500 530)"><path class="arc-hb" d="M0 -5C0 -13-15 -13-15 -3C-15 5-6 10 0 16C6 10 15 5 15 -3C15 -13 0 -13 0 -5Z" fill="#8a8a90" stroke="#5a5a60" stroke-width="1.2" stroke-linejoin="round"/></g>
                   </svg>
 
-                  <button class="arc-frame arc-f1" onclick="openArcProfile(this, 'view-char1')" aria-label="東雲 悠 プロフィール">
+                  <button class="arc-frame arc-f1" onclick="window.openArcProfile(this, 'view-char1')" aria-label="東雲 悠 プロフィール">
                     <div class="arc-scr">
                       <img src="https://imgur.com/ErYgGrb.png" referrerpolicy="no-referrer" alt="" onerror="this.onerror=null;this.src=this.src.replace('//imgur.com/','//i.imgur.com/')">
                       <div class="arc-vf"><i></i><i></i><i></i><i></i></div>
@@ -488,7 +473,7 @@
                     </div>
                     <div class="arc-bar"><div class="arc-view arc-px">VIEW</div><div class="arc-btns"><i></i><i></i></div></div>
                   </button>
-                  <button class="arc-frame arc-f2" onclick="openArcProfile(this, 'view-char2')" aria-label="綾瀬 小夜 プロフィール">
+                  <button class="arc-frame arc-f2" onclick="window.openArcProfile(this, 'view-char2')" aria-label="綾瀬 小夜 プロフィール">
                     <div class="arc-scr">
                       <img src="https://imgur.com/77VL3mi.png" referrerpolicy="no-referrer" alt="" onerror="this.onerror=null;this.src=this.src.replace('//imgur.com/','//i.imgur.com/')">
                       <div class="arc-vf"><i></i><i></i><i></i><i></i></div>
@@ -502,7 +487,7 @@
                   <div class="arc-cap" style="left:9%"><b>東雲 悠</b><span class="arc-px">SHINONOME YUU</span></div>
                   <div class="arc-cap" style="left:57%"><b>綾瀬 小夜</b><span class="arc-px">AYASE SAYO</span></div>
 
-                  <button class="arc-home arc-px" onclick="goToPage('landing')"><i></i>MAIN HOME</button>
+                  <button class="arc-home arc-px" onclick="window.goToPage('landing')"><i></i>MAIN HOME</button>
                 </div>
             </div>
         </div>
@@ -522,10 +507,10 @@
                 
                 <!-- 네비게이션 버튼 영역 -->
                 <div class="flex items-center gap-3 mb-12">
-                    <button onclick="switchArchiveView('view-main')" class="flex items-center justify-center w-11 h-11 bg-gray-50 text-gray-400 hover:text-char1 hover:bg-char1/5 rounded-full transition-all duration-300 hover:-translate-x-1 shadow-sm border border-gray-100" title="뒤로 가기">
+                    <button onclick="window.switchArchiveView('view-main')" class="flex items-center justify-center w-11 h-11 bg-gray-50 text-gray-400 hover:text-char1 hover:bg-char1/5 rounded-full transition-all duration-300 hover:-translate-x-1 shadow-sm border border-gray-100" title="뒤로 가기">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                     </button>
-                    <button onclick="goToPage('landing')" class="flex items-center justify-center px-5 h-11 bg-gray-50 text-gray-400 hover:text-char1 hover:bg-char1/5 rounded-full transition-all duration-300 shadow-sm border border-gray-100 text-xs font-bold tracking-widest uppercase gap-2" title="메인 홈으로">
+                    <button onclick="window.goToPage('landing')" class="flex items-center justify-center px-5 h-11 bg-gray-50 text-gray-400 hover:text-char1 hover:bg-char1/5 rounded-full transition-all duration-300 shadow-sm border border-gray-100 text-xs font-bold tracking-widest uppercase gap-2" title="메인 홈으로">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                         HOME
                     </button>
@@ -547,7 +532,7 @@
                     </div>
                     <div>
                         <h3 class="text-sm font-bold text-gray-400 tracking-widest uppercase mb-6">Theme Track</h3>
-                        <div id="player-char1" class="music-player flex items-center gap-4 bg-gray-50 p-2 pr-6 rounded-full border border-gray-200 w-max max-w-full cursor-pointer hover:bg-gray-100 transition-colors shadow-sm" onclick="toggleAudio('char1')">
+                        <div id="player-char1" class="music-player flex items-center gap-4 bg-gray-50 p-2 pr-6 rounded-full border border-gray-200 w-max max-w-full cursor-pointer hover:bg-gray-100 transition-colors shadow-sm" onclick="window.toggleAudio('char1')">
                             <div class="w-12 h-12 rounded-full overflow-hidden shrink-0"><img src="https://imgur.com/RyDsjWu.png" class="w-full h-full object-cover"></div>
                             <div class="flex flex-col mr-2"><span class="text-sm font-bold text-gray-800">ずうっといっしょ！</span><span class="text-xs text-gray-500">キタニタツヤ</span></div>
                             <div class="text-char1">
@@ -609,7 +594,7 @@
                     </div>
                 </div>
                 <div class="mt-24 pt-10 border-t border-gray-200 pb-20">
-                    <button onclick="toggleComment('comment-char1', 'icon-char1')" class="w-full flex items-center justify-between text-left group">
+                    <button onclick="window.toggleComment('comment-char1', 'icon-char1')" class="w-full flex items-center justify-between text-left group">
                         <span class="text-sm font-bold text-gray-400 tracking-widest uppercase group-hover:text-char1 transition-colors">Partner's Comment</span>
                         <svg id="icon-char1" class="w-6 h-6 text-gray-300 group-hover:text-char1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
@@ -640,10 +625,10 @@
                 
                 <!-- 네비게이션 버튼 영역 -->
                 <div class="flex items-center gap-3 mb-12">
-                    <button onclick="switchArchiveView('view-main')" class="flex items-center justify-center w-11 h-11 bg-gray-50 text-gray-400 hover:text-char2 hover:bg-char2/5 rounded-full transition-all duration-300 hover:-translate-x-1 shadow-sm border border-gray-100" title="뒤로 가기">
+                    <button onclick="window.switchArchiveView('view-main')" class="flex items-center justify-center w-11 h-11 bg-gray-50 text-gray-400 hover:text-char2 hover:bg-char2/5 rounded-full transition-all duration-300 hover:-translate-x-1 shadow-sm border border-gray-100" title="뒤로 가기">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                     </button>
-                    <button onclick="goToPage('landing')" class="flex items-center justify-center px-5 h-11 bg-gray-50 text-gray-400 hover:text-char2 hover:bg-char2/5 rounded-full transition-all duration-300 shadow-sm border border-gray-100 text-xs font-bold tracking-widest uppercase gap-2" title="메인 홈으로">
+                    <button onclick="window.goToPage('landing')" class="flex items-center justify-center px-5 h-11 bg-gray-50 text-gray-400 hover:text-char2 hover:bg-char2/5 rounded-full transition-all duration-300 shadow-sm border border-gray-100 text-xs font-bold tracking-widest uppercase gap-2" title="메인 홈으로">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                         HOME
                     </button>
@@ -651,7 +636,7 @@
 
                 <div class="border-l-4 border-char2 pl-6 mb-16">
                     <p class="text-2xl font-light text-gray-800 leading-relaxed">"心臓の鼓動が一つに重なってからも、その最期を尽くすまで。<br>私も、悠のそばにいるよ。"</p>
-                    <p class="mt-3 text-sm text-gray-400 font-light">심장박동이 하나로 포개어지고 나서도,<br>그 마지막을 다할 때까지. 나도, 유우의 곁에 있을게.</p>
+                    <p class="mt-3 text-sm text-gray-400 font-light">심장박동이 하나로 포개어지고 나서도, 그 마지막을 다할 때까지. 나도, 유우의 곁에 있을게.</p>
                 </div>
                 <div class="space-y-16">
                     <div>
@@ -665,7 +650,7 @@
                     </div>
                     <div>
                         <h3 class="text-sm font-bold text-gray-400 tracking-widest uppercase mb-6">Theme Track</h3>
-                        <div id="player-char2" class="music-player flex items-center gap-4 bg-gray-50 p-2 pr-6 rounded-full border border-gray-200 w-max max-w-full cursor-pointer hover:bg-gray-100 transition-colors shadow-sm" onclick="toggleAudio('char2')">
+                        <div id="player-char2" class="music-player flex items-center gap-4 bg-gray-50 p-2 pr-6 rounded-full border border-gray-200 w-max max-w-full cursor-pointer hover:bg-gray-100 transition-colors shadow-sm" onclick="window.toggleAudio('char2')">
                             <div class="w-12 h-12 rounded-full overflow-hidden shrink-0"><img src="https://imgur.com/1lLrcks.png" class="w-full h-full object-cover"></div>
                             <div class="flex flex-col mr-2"><span class="text-sm font-bold text-gray-800">あなたのことをおしえて</span><span class="text-xs text-gray-500">キタニタツヤ</span></div>
                             <div class="text-char2">
@@ -727,7 +712,7 @@
                     </div>
                 </div>
                 <div class="mt-24 pt-10 border-t border-gray-200 pb-20">
-                    <button onclick="toggleComment('comment-char2', 'icon-char2')" class="w-full flex items-center justify-between text-left group">
+                    <button onclick="window.toggleComment('comment-char2', 'icon-char2')" class="w-full flex items-center justify-between text-left group">
                         <span class="text-sm font-bold text-gray-400 tracking-widest uppercase group-hover:text-char2 transition-colors">Partner's Comment</span>
                         <svg id="icon-char2" class="w-6 h-6 text-gray-300 group-hover:text-char2 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
                     </button>
@@ -760,7 +745,7 @@
 
         <!-- 상단 고정: 홈 버튼 + 음표 토글 -->
         <div class="y2k-topbar fixed top-8 left-8 z-[100]">
-            <button onclick="goToPage('landing')" class="y2k-home group" aria-label="메인 홈으로">
+            <button onclick="window.goToPage('landing')" class="y2k-home group" aria-label="메인 홈으로">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
                 MAIN HOME
             </button>
@@ -797,7 +782,7 @@
                 </svg>
             </header>
 
-            <!-- Profile Section (호칭 포함) -->
+            <!-- Profile Section (호칭 및 코멘트 포함) -->
             <section id="profile" class="y2k-wrap y2k-profiles">
                 <!-- 유우 프로필 -->
                 <article class="y2k-card">
@@ -814,7 +799,12 @@
                             <span class="names"><span class="a">너</span><span class="sl"> / </span><span class="b">사요</span></span>
                         </div>
                         <p class="y2k-desc">도쿄에서 활동하는 인기 맨즈 지하돌 '앨리스 해프닝'의 멤버. 무대 위에서는 금발 벽안의 완벽한 왕자님을 연기하지만, 본모습은 피곤에 절어 있는 청년이다. 무대 위의 자신을 거짓말쟁이처럼 느끼며 천천히 부서져가던 중, 옥상에서 사요와 마주치고 단 하루 만에 사랑에 빠져버린다.</p>
-                        <p class="y2k-quote">"영화였다면 여기서 엔드롤인가. 그래도 계속되는 거지. 내일도, 모레도."</p>
+                        
+                        <!-- 유우 코멘트 (아카이브 프로필 스타일 적용) -->
+                        <div class="mt-6 border-l-4 border-yeonji pl-5">
+                            <p class="text-lg font-light text-zinc-800 leading-relaxed">"映画だったならここでエンドロールか。<br>それでも続くんだろ。明日も、明後日も。"</p>
+                            <p class="mt-2 text-sm text-zinc-400 font-light">영화였다면 여기서 엔드롤인가. 그래도 계속되는 거지. 내일도, 모레도.</p>
+                        </div>
                     </div>
                 </article>
 
@@ -833,7 +823,12 @@
                             <span class="names"><span class="b">유우</span></span>
                         </div>
                         <p class="y2k-desc">스무 살의 프리랜서 사진가. 눈 밑에 점이 있으며 늘 차분하고 담담하다. '확장성 심근병증'이라는 난병을 앓고 있어 언제 심장이 멈출지 모르는 삶을 살고 있다. 유우의 진짜 모습을 꿰뚫어 보고 온전히 받아들이며, 마지막 순간까지 유우와 함께하기로 약속한다.</p>
-                        <p class="y2k-quote">"심장박동이 하나로 포개어지고 나서도,<br>그 마지막을 다할 때까지. 나도, 유우의 곁에 있을게."</p>
+                        
+                        <!-- 사요 코멘트 (아카이브 프로필 스타일 적용, 줄바꿈 제거) -->
+                        <div class="mt-6 border-l-4 border-dahee pl-5">
+                            <p class="text-lg font-light text-zinc-800 leading-relaxed">"心臓の鼓動が一つに重なってからも、その最期を尽くすまで。<br>私も、悠のそばにいるよ。"</p>
+                            <p class="mt-2 text-sm text-zinc-400 font-light">심장박동이 하나로 포개어지고 나서도, 그 마지막을 다할 때까지. 나도, 유우의 곁에 있을게.</p>
+                        </div>
                     </div>
                 </article>
             </section>
@@ -1028,107 +1023,6 @@
 
 
     <!-- ==========================================
-         [스크립트] 카메라 메인 로직 (절대 건드리지 않음)
-    =========================================== -->
-    <script>
-    (function(){
-    const $=id=>document.getElementById(id);
-    const items=[...document.querySelectorAll('.item')];
-    let on=false, sel=0;
-    function render(){items.forEach((el,i)=>el.classList.toggle('sel',i===sel));$('mode').classList.toggle('r',sel===1)}
-    function flash(){
-      const f=$('flash');f.classList.remove('go');void f.offsetWidth;f.classList.add('go');
-      const e=$('ecg');e.classList.add('beat');setTimeout(()=>e.classList.remove('beat'),900);
-    }
-    function powerOn(){
-      if(on)return; on=true; flash();
-      setTimeout(()=>{$('standby').classList.add('off');$('menu').classList.remove('off');$('screen').classList.add('on')},150);
-    }
-    function move(d){if(!on){powerOn();return} sel=(sel+d+items.length)%items.length;render()}
-    function enter(){
-      if(!on){powerOn();return}
-      const page=items[sel].dataset.page; flash();
-      setTimeout(()=>{
-        window.goToPage(page);
-      },450);
-    }
-    $('shutter').onclick=()=>on?enter():powerOn();
-    $('reticle').onclick=powerOn;
-    $('up').onclick=()=>move(-1);$('down').onclick=()=>move(1);
-    $('ok').onclick=enter;
-    $('mode').onclick=()=>{if(!on){powerOn();return}move(1)};
-    items.forEach((el,i)=>{el.onmouseenter=()=>{sel=i;render()};el.onclick=()=>{sel=i;render();enter()}});
-    addEventListener('keydown',e=>{
-      const lp=document.getElementById('page-landing');if(lp.classList.contains('hidden')||lp.style.opacity==='0')return;
-      if(e.key==='ArrowLeft'||e.key==='ArrowUp')move(-1);
-      else if(e.key==='ArrowRight'||e.key==='ArrowDown')move(1);
-      else if(e.key==='Enter'||e.key===' '){e.preventDefault();enter()}
-    });
-    render();
-    /* 메인으로 돌아올 때 카메라를 처음 상태(FOCUS)로 되돌림 */
-    function resetCamera(){on=false;sel=0;render();$('standby').classList.remove('off');$('menu').classList.add('off');$('screen').classList.remove('on')}
-
-
-    window.resetCamera=resetCamera;
-    })();
-    /* ===== ASCII(점자) 아트 배경: 도형을 그려서 문자로 변환 ===== */
-    (function(){
-    const cv=document.getElementById('ascii'),cg=cv.getContext('2d');
-    const RAMP=['','⠁','⠃','⠇','⡇','⣇','⣧','⣷','⣿'];
-    function star(g,x,y,R,r,rot){g.beginPath();for(let i=0;i<10;i++){const a=rot+i*Math.PI/5-Math.PI/2,q=i%2?r:R;g[i?'lineTo':'moveTo'](x+Math.cos(a)*q,y+Math.sin(a)*q)}g.closePath()}
-    function spark(g,x,y,R){g.beginPath();g.moveTo(x,y-R);g.quadraticCurveTo(x,y,x+R,y);g.quadraticCurveTo(x,y,x,y+R);g.quadraticCurveTo(x,y,x-R,y);g.quadraticCurveTo(x,y,x,y-R);g.closePath()}
-    function heart(g,x,y,s){g.beginPath();g.moveTo(x,y+s*.9);g.bezierCurveTo(x-s*1.3,y+s*.1,x-s*.7,y-s*.9,x,y-s*.3);g.bezierCurveTo(x+s*.7,y-s*.9,x+s*1.3,y+s*.1,x,y+s*.9);g.closePath()}
-    function heartA(g,x,y,s,rot){g.save();g.translate(x,y);g.rotate(rot);g.scale(s,s);g.lineCap='round';g.lineJoin='round';
-     const st=(w,d)=>{g.lineWidth=w;g.strokeStyle='#4c4c4c';g.beginPath();g.moveTo(d[0],d[1]);g.bezierCurveTo(d[2],d[3],d[4],d[5],d[6],d[7]);g.stroke()};
-     st(.3,[.05,-.5,0,-1,.15,-1.4,.5,-1.35]);st(.3,[.5,-1.35,.85,-1.3,.85,-.9,.78,-.5]);            /* 대동맥궁 */
-     st(.1,[.18,-1.32,.15,-1.5,.12,-1.65,.1,-1.7]);st(.1,[.33,-1.4,.33,-1.55,.34,-1.7,.34,-1.75]);st(.1,[.47,-1.36,.5,-1.5,.55,-1.62,.6,-1.68]);
-     st(.24,[.4,-.5,.6,-.95,.95,-1,1.2,-.8]);                                                         /* 폐동맥 */
-     st(.22,[-.45,-.5,-.5,-.95,-.5,-1.3,-.45,-1.6]);                                                  /* 상대정맥 */
-     st(.2,[-.5,.3,-.65,.55,-.7,.75,-.62,.95]);                                                      /* 하대정맥 */
-     {const q=g.createRadialGradient(-.25,-.05,.05,0,.2,1.15);q.addColorStop(0,'#c4c4c4');q.addColorStop(.55,'#707070');q.addColorStop(1,'#3a3a3a');g.fillStyle=q}g.beginPath();g.moveTo(-.75,-.35);g.bezierCurveTo(-.95,.3,-.45,.9,-.1,1.2);g.bezierCurveTo(.5,.85,.98,.4,.92,-.2);
-     g.bezierCurveTo(.86,-.58,.4,-.72,.1,-.6);g.bezierCurveTo(-.2,-.76,-.6,-.7,-.75,-.35);g.closePath();g.fill();
-     g.fillStyle='#8e8e8e';g.beginPath();g.ellipse(-.52,-.42,.33,.3,-.3,0,7);g.fill();g.beginPath();g.ellipse(.6,-.5,.3,.22,.5,0,7);g.fill();   /* 심방 */
-     g.strokeStyle='#fff';g.lineWidth=.09;
-     [[-.8,-.15,-.3,.05,.3,-.12,.9,-.2],[.05,-.3,0,.35,-.04,.8,-.1,1.15],[.62,-.05,.72,.3,.5,.72,.22,.98],[-.35,.05,-.3,.4,-.2,.7,-.12,.95]].forEach(d=>{g.beginPath();g.moveTo(d[0],d[1]);g.bezierCurveTo(d[2],d[3],d[4],d[5],d[6],d[7]);g.stroke()});
-     g.restore()}
-    function bow(g,x,y,s,rot){g.save();g.translate(x,y);g.rotate(rot);
-     g.fillStyle='#4a4a4a';
-     [-1,1].forEach(d=>{g.beginPath();g.moveTo(0,0);g.bezierCurveTo(d*.4*s,-.85*s,d*1.35*s,-.65*s,d*1.3*s,.05*s);g.bezierCurveTo(d*1.2*s,.75*s,d*.4*s,.5*s,0,0);g.fill()});
-     g.beginPath();g.moveTo(-.12*s,.1*s);g.lineTo(-.6*s,1.3*s);g.lineTo(-.28*s,1.08*s);g.lineTo(-.05*s,1.4*s);g.lineTo(.12*s,.1*s);g.fill();
-     g.beginPath();g.moveTo(.06*s,.1*s);g.lineTo(.5*s,1.2*s);g.lineTo(.22*s,1.02*s);g.lineTo(.08*s,1.3*s);g.closePath();g.fill();
-     g.strokeStyle='#fff';g.lineWidth=s*.07;g.lineCap='round';
-     [-1,1].forEach(d=>{g.beginPath();g.moveTo(d*.2*s,-.05*s);g.quadraticCurveTo(d*.7*s,-.45*s,d*1.1*s,-.2*s);g.stroke();g.beginPath();g.moveTo(d*.25*s,.15*s);g.quadraticCurveTo(d*.7*s,.3*s,d*1.05*s,.25*s);g.stroke()});
-     g.fillStyle='#222';g.beginPath();g.ellipse(0,.02*s,.2*s,.26*s,0,0,7);g.fill();g.restore()}
-    function fuzzy(g,x,y,R,rot,pts){g.save();star(g,x,y,R,R*(pts||.5),rot);g.clip();const gr=g.createRadialGradient(x,y,0,x,y,R);gr.addColorStop(0,'#444');gr.addColorStop(.55,'#888');gr.addColorStop(1,'#fff');g.fillStyle=gr;g.fillRect(x-R,y-R,R*2,R*2);g.restore()}
-    function outlined(g,x,y,R,rot){star(g,x,y,R,R*.45,rot);g.fillStyle='#666';g.fill();star(g,x,y,R*.76,R*.34,rot);g.fillStyle='#fff';g.fill();star(g,x,y,R*.5,R*.22,rot);g.fillStyle='#8a8a8a';g.fill()}
-    function draw(){
-     const W=cv.parentElement.clientWidth,H=cv.parentElement.clientHeight,dpr=Math.min(devicePixelRatio||1,2),u=Math.min(W,H),c=Math.max(5,Math.min(8,W/165)),ch=c*1.8;
-     const cols=Math.ceil(W/c),rows=Math.ceil(H/ch);
-     const o=document.createElement('canvas');o.width=cols;o.height=rows;const g=o.getContext('2d',{willReadFrequently:true});
-     g.fillStyle='#fff';g.fillRect(0,0,cols,rows);g.setTransform(1/c,0,0,1/ch,0,0);
-     const P=W<H*.9,H1=(x,y,z,f)=>{heart(g,W*x,H*y,u*z);g.fillStyle='#707070';g.fill();heart(g,W*x,H*y,u*z*.6);g.fillStyle='#fff';g.fill()};
-     let sp;
-     if(!P){
-      H1(.1,.5,.11);
-      heartA(g,W*.885,H*.44,u*.13,-.25);
-      sp=[[.07,.2,.025],[.95,.72,.02]];
-     }else{
-      H1(.7,.26,.13);
-      heartA(g,W*.27,H*.8,u*.17,-.25);
-      sp=[[.2,.09,.03],[.86,.92,.025]];
-     }
-     sp.forEach(a=>{spark(g,W*a[0],H*a[1],u*a[2]);g.fillStyle='#555';g.fill()});
-     const d=g.getImageData(0,0,cols,rows).data;
-     cv.width=W*dpr;cv.height=H*dpr;cg.setTransform(dpr,0,0,dpr,0,0);cg.clearRect(0,0,W,H);
-     cg.font=(c*1.75)+'px "DejaVu Sans Mono",Menlo,"Segoe UI Symbol",monospace';cg.textAlign='center';cg.textBaseline='middle';cg.fillStyle='rgba(80,82,94,.72)';
-     for(let y=0;y<rows;y++)for(let x=0;x<cols;x++){const k=Math.round(Math.pow(1-d[(y*cols+x)*4]/255,.6)*(RAMP.length-1));if(k>0)cg.fillText(RAMP[k],(x+.5)*c,(y+.5)*ch)}
-    }
-    let t;addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(draw,150)});draw();
-    })();
-
-    </script>
-
-    <!-- ==========================================
          [스크립트] 전체 로직 제어
     =========================================== -->
     <script>
@@ -1136,106 +1030,127 @@
         window.isStoryPlaying = false;
 
         // 1. 페이지(앱) 간 이동 로직 (뷰포트 동적 변경 포함)
-        function goToPage(pageId) {
-            // 모든 오디오 정지
-            document.querySelectorAll('audio').forEach(audio => {
-                audio.pause();
-                audio.currentTime = 0;
-            });
-            document.querySelectorAll('.music-player').forEach(player => player.classList.remove('playing'));
-            
-            // 서사 BGM 버튼 초기화
-            window.isStoryPlaying = false;
-            const bgmBtnUI = document.getElementById('bgmBtn');
-            bgmBtnUI.classList.remove('text-yeonji', 'border-yeonji/50', 'shadow-[0_0_20px_rgba(82,82,91,0.4)]');
-            bgmBtnUI.classList.add('text-zinc-400', 'border-zinc-200');
-
-            // 메인(카메라)으로 돌아오면 카메라를 처음 상태(FOCUS)로 되돌림
-            if (pageId === 'landing' && typeof resetCamera === 'function') resetCamera();
-
-            // 뷰포트 동적 변경 (서사 페이지, 아카이브 메인 페이지일 때 1280px 강제)
-            const viewportMeta = document.getElementById('viewport-meta');
-            if (pageId === 'narrative' || pageId === 'archive') {
-                viewportMeta.setAttribute('content', 'width=1280');
-            } else {
-                viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0');
-            }
-
-            // 모든 페이지 숨기기 (페이드 아웃)
-            const pages = ['page-landing', 'page-archive', 'page-narrative'];
-            pages.forEach(p => {
-                const el = document.getElementById(p);
-                if (p === 'page-' + pageId) {
-                    el.classList.remove('hidden');
-                    // 브라우저 렌더링 강제 업데이트
-                    void el.offsetWidth;
-                    el.style.opacity = '1';
-                } else {
-                    el.style.opacity = '0';
-                    setTimeout(() => {
-                        if(el.style.opacity === '0') el.classList.add('hidden');
-                    }, 500);
-                }
-            });
-
-            // 바디 스크롤 제어 (서사 페이지만 스크롤 허용)
-            setTimeout(() => {
-                if (pageId === 'narrative') {
-                    document.body.style.overflow = 'auto';
-                    window.scrollTo(0, 0);
-                } else {
-                    document.body.style.overflow = 'hidden';
-                }
-            }, 10);
-
-            // 아카이브로 갈 때 메인 뷰로 초기화
-            if (pageId === 'archive') {
-                document.querySelectorAll('#page-archive .view-section').forEach(el => {
-                    el.classList.add('hidden', 'opacity-0');
-                    el.classList.remove('flex', 'opacity-100');
+        window.goToPage = function(pageId) {
+            try {
+                // 모든 오디오 정지
+                document.querySelectorAll('audio').forEach(audio => {
+                    audio.pause();
+                    audio.currentTime = 0;
                 });
-                const mainView = document.getElementById('view-main');
-                mainView.classList.remove('hidden', 'opacity-0');
-                mainView.classList.add('flex', 'opacity-100');
+                document.querySelectorAll('.music-player').forEach(player => player.classList.remove('playing'));
                 
-                // 아코디언 닫기
-                document.querySelectorAll('.expand-content').forEach(el => el.classList.remove('active'));
-                document.querySelectorAll('[id^="icon"]').forEach(icon => icon.style.transform = 'rotate(0deg)');
-            }
-
-            // 서사 페이지 진입 시 BGM 자동 재생 (사용자 클릭 이벤트 내에서 실행되므로 차단되지 않음)
-            if (pageId === 'narrative') {
-                const audioStory = document.getElementById('audio-narrative');
-                const p = audioStory.play();
-                if (p !== undefined) {
-                    p.then(() => {
-                        window.isStoryPlaying = true;
-                        bgmBtnUI.classList.remove('text-zinc-400', 'border-zinc-200');
-                        bgmBtnUI.classList.add('text-yeonji', 'border-yeonji/50', 'shadow-[0_0_20px_rgba(82,82,91,0.4)]');
-                    }).catch(e => {
-                        console.log("자동 재생 차단됨:", e);
-                    });
+                // 서사 BGM 버튼 초기화
+                window.isStoryPlaying = false;
+                const bgmBtnUI = document.getElementById('bgmBtn');
+                if (bgmBtnUI) {
+                    bgmBtnUI.classList.remove('text-yeonji', 'border-yeonji/50', 'shadow-[0_0_20px_rgba(82,82,91,0.4)]');
+                    bgmBtnUI.classList.add('text-zinc-400', 'border-zinc-200');
                 }
+
+                // 메인(카메라)으로 돌아오면 카메라를 처음 상태(FOCUS)로 되돌림
+                if (pageId === 'landing' && typeof window.resetCamera === 'function') {
+                    window.resetCamera();
+                }
+
+                // 뷰포트 동적 변경 (서사 페이지, 아카이브 메인 페이지일 때 1280px 강제)
+                const viewportMeta = document.getElementById('viewport-meta');
+                if (viewportMeta) {
+                    if (pageId === 'narrative' || pageId === 'archive') {
+                        viewportMeta.setAttribute('content', 'width=1280');
+                    } else {
+                        viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0');
+                    }
+                }
+
+                // 모든 페이지 숨기기 (페이드 아웃)
+                const pages = ['page-landing', 'page-archive', 'page-narrative'];
+                pages.forEach(p => {
+                    const el = document.getElementById(p);
+                    if (el) {
+                        if (p === 'page-' + pageId) {
+                            el.classList.remove('hidden');
+                            // 브라우저 렌더링 강제 업데이트
+                            void el.offsetWidth;
+                            el.style.opacity = '1';
+                        } else {
+                            el.style.opacity = '0';
+                            setTimeout(() => {
+                                if(el.style.opacity === '0') el.classList.add('hidden');
+                            }, 500);
+                        }
+                    }
+                });
+
+                // 바디 스크롤 제어 (서사 페이지만 스크롤 허용)
+                setTimeout(() => {
+                    if (pageId === 'narrative') {
+                        document.body.style.overflow = 'auto';
+                        window.scrollTo(0, 0);
+                    } else {
+                        document.body.style.overflow = 'hidden';
+                    }
+                }, 10);
+
+                // 아카이브로 갈 때 메인 뷰로 초기화
+                if (pageId === 'archive') {
+                    document.querySelectorAll('#page-archive .view-section').forEach(el => {
+                        el.classList.add('hidden', 'opacity-0');
+                        el.classList.remove('flex', 'opacity-100');
+                    });
+                    const mainView = document.getElementById('view-main');
+                    if (mainView) {
+                        mainView.classList.remove('hidden', 'opacity-0');
+                        mainView.classList.add('flex', 'opacity-100');
+                    }
+                    
+                    // 아코디언 닫기
+                    document.querySelectorAll('.expand-content').forEach(el => el.classList.remove('active'));
+                    document.querySelectorAll('[id^="icon"]').forEach(icon => icon.style.transform = 'rotate(0deg)');
+                }
+
+                // 서사 페이지 진입 시 BGM 자동 재생
+                if (pageId === 'narrative') {
+                    const audioStory = document.getElementById('audio-narrative');
+                    if (audioStory) {
+                        const p = audioStory.play();
+                        if (p !== undefined) {
+                            p.then(() => {
+                                window.isStoryPlaying = true;
+                                if (bgmBtnUI) {
+                                    bgmBtnUI.classList.remove('text-zinc-400', 'border-zinc-200');
+                                    bgmBtnUI.classList.add('text-yeonji', 'border-yeonji/50', 'shadow-[0_0_20px_rgba(82,82,91,0.4)]');
+                                }
+                            }).catch(e => {
+                                console.log("자동 재생 차단됨:", e);
+                            });
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error("goToPage 실행 중 에러 발생:", error);
             }
-        }
+        };
 
         // 2. 아카이브(프로필) 내부 뷰 전환 로직
-        let isArchiveAnimating = false;
-        function switchArchiveView(targetId) {
-            if (isArchiveAnimating) return;
+        window.isArchiveAnimating = false;
+        window.switchArchiveView = function(targetId) {
+            if (window.isArchiveAnimating) return;
             
             const targetEl = document.getElementById(targetId);
             const activeEl = document.querySelector('#page-archive .view-section:not(.hidden)');
             
+            if (!targetEl) return;
             if (activeEl && activeEl.id === targetId) return;
-            isArchiveAnimating = true;
+            window.isArchiveAnimating = true;
 
-            // 뷰포트 동적 변경 (아카이브 메인은 1280px 강제, 상세 페이지는 모바일 반응형 유지)
+            // 뷰포트 동적 변경
             const viewportMeta = document.getElementById('viewport-meta');
-            if (targetId === 'view-main') {
-                viewportMeta.setAttribute('content', 'width=1280');
-            } else {
-                viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0');
+            if (viewportMeta) {
+                if (targetId === 'view-main') {
+                    viewportMeta.setAttribute('content', 'width=1280');
+                } else {
+                    viewportMeta.setAttribute('content', 'width=device-width, initial-scale=1.0');
+                }
             }
 
             // 오디오 정지
@@ -1260,30 +1175,42 @@
                     setTimeout(() => {
                         targetEl.classList.remove('opacity-0');
                         targetEl.classList.add('opacity-100');
-                        setTimeout(() => { isArchiveAnimating = false; }, 700);
+                        setTimeout(() => { window.isArchiveAnimating = false; }, 700);
                     }, 50);
                 }, 700);
+            } else {
+                targetEl.classList.remove('hidden');
+                targetEl.classList.add('flex');
+                setTimeout(() => {
+                    targetEl.classList.remove('opacity-0');
+                    targetEl.classList.add('opacity-100');
+                    setTimeout(() => { window.isArchiveAnimating = false; }, 700);
+                }, 50);
             }
-        }
+        };
 
         // 2-1. 아카이브 메인화면 프로필 클릭 시 플래시 효과 후 이동
-        function openArcProfile(btn, target) {
+        window.openArcProfile = function(btn, target) {
             if (btn.busy) return;
             btn.busy = true;
             const fl = btn.querySelector('.arc-fl');
-            fl.classList.remove('go');
-            void fl.offsetWidth;
-            fl.classList.add('go');
+            if (fl) {
+                fl.classList.remove('go');
+                void fl.offsetWidth;
+                fl.classList.add('go');
+            }
             setTimeout(() => {
-                switchArchiveView(target);
+                window.switchArchiveView(target);
                 btn.busy = false;
             }, 380);
-        }
+        };
 
         // 3. 프로필 테마 BGM 제어
-        function toggleAudio(charId) {
+        window.toggleAudio = function(charId) {
             const targetAudio = document.getElementById('audio-' + charId);
             const targetPlayer = document.getElementById('player-' + charId);
+            if (!targetAudio || !targetPlayer) return;
+
             const isPlaying = targetPlayer.classList.contains('playing');
 
             document.querySelectorAll('audio').forEach(audio => audio.pause());
@@ -1293,12 +1220,14 @@
                 targetAudio.play().catch(e => console.log("재생 실패:", e));
                 targetPlayer.classList.add('playing');
             }
-        }
+        };
 
         // 4. 프로필 코멘트 토글 로직
-        function toggleComment(contentId, iconId) {
+        window.toggleComment = function(contentId, iconId) {
             const content = document.getElementById(contentId);
             const icon = document.getElementById(iconId);
+            if (!content || !icon) return;
+
             if (content.classList.contains('active')) {
                 content.classList.remove('active');
                 icon.style.transform = 'rotate(0deg)';
@@ -1307,24 +1236,223 @@
                 icon.style.transform = 'rotate(180deg)';
                 setTimeout(() => { content.scrollIntoView({ behavior: 'smooth', block: 'end' }); }, 300);
             }
-        }
+        };
 
         // 5. 서사 페이지 메인 BGM 제어
-        const bgmBtn = document.getElementById('bgmBtn');
-        const audioStory = document.getElementById('audio-narrative');
+        document.addEventListener('DOMContentLoaded', () => {
+            const bgmBtn = document.getElementById('bgmBtn');
+            const audioStory = document.getElementById('audio-narrative');
 
-        bgmBtn.addEventListener('click', () => {
-            if (window.isStoryPlaying) {
-                audioStory.pause();
-                bgmBtn.classList.remove('text-yeonji', 'border-yeonji/50', 'shadow-[0_0_20px_rgba(82,82,91,0.4)]');
-                bgmBtn.classList.add('text-zinc-400', 'border-zinc-200');
-            } else {
-                audioStory.play().catch(e => console.log("재생 실패:", e));
-                bgmBtn.classList.remove('text-zinc-400', 'border-zinc-200');
-                bgmBtn.classList.add('text-yeonji', 'border-yeonji/50', 'shadow-[0_0_20px_rgba(82,82,91,0.4)]');
+            if (bgmBtn && audioStory) {
+                bgmBtn.addEventListener('click', () => {
+                    if (window.isStoryPlaying) {
+                        audioStory.pause();
+                        bgmBtn.classList.remove('text-yeonji', 'border-yeonji/50', 'shadow-[0_0_20px_rgba(82,82,91,0.4)]');
+                        bgmBtn.classList.add('text-zinc-400', 'border-zinc-200');
+                    } else {
+                        audioStory.play().catch(e => console.log("재생 실패:", e));
+                        bgmBtn.classList.remove('text-zinc-400', 'border-zinc-200');
+                        bgmBtn.classList.add('text-yeonji', 'border-yeonji/50', 'shadow-[0_0_20px_rgba(82,82,91,0.4)]');
+                    }
+                    window.isStoryPlaying = !window.isStoryPlaying;
+                });
             }
-            window.isStoryPlaying = !window.isStoryPlaying;
         });
+
+        // 6. 랜딩 페이지(카메라) 조작 로직
+        document.addEventListener('DOMContentLoaded', () => {
+            const reticle = document.getElementById('reticle');
+            const standby = document.getElementById('standby');
+            const menu = document.getElementById('menu');
+            const screen = document.getElementById('screen');
+            const flash = document.getElementById('flash');
+            const ecg = document.getElementById('ecg');
+            const items = document.querySelectorAll('.menu .item');
+            
+            const btnUp = document.getElementById('up');
+            const btnDown = document.getElementById('down');
+            const btnOk = document.getElementById('ok');
+            const btnShutter = document.getElementById('shutter');
+            const btnMode = document.getElementById('mode');
+
+            let isCamOn = false;
+            let selIdx = 0; // 0: 아카이브, 1: 서사
+
+            // 카메라 켜기 함수
+            function turnOnCamera() {
+                if (isCamOn) return;
+                isCamOn = true;
+
+                // 1. 플래시 터짐
+                if (flash) {
+                    flash.classList.remove('go');
+                    void flash.offsetWidth; // 애니메이션 리셋
+                    flash.classList.add('go');
+                }
+
+                // 2. 화면 켜짐 및 심전도 박동 변경
+                if (standby) standby.classList.add('off');
+                if (screen) screen.classList.add('on');
+                if (ecg) ecg.classList.add('beat');
+
+                // 3. 잠시 후 메뉴 표시
+                setTimeout(() => {
+                    if (menu) menu.classList.remove('off');
+                }, 800);
+            }
+
+            // [포커스] 터치/클릭 시 카메라 켜짐
+            if (reticle) {
+                reticle.addEventListener('click', turnOnCamera);
+            }
+
+            // 메뉴 선택 UI 업데이트
+            function updateMenu() {
+                items.forEach((el, i) => {
+                    if (i === selIdx) el.classList.add('sel');
+                    else el.classList.remove('sel');
+                });
+                // 모드 스위치 손잡이 이동 연동
+                if (btnMode) {
+                    if (selIdx === 1) btnMode.classList.add('r');
+                    else btnMode.classList.remove('r');
+                }
+            }
+
+            // 방향키 및 모드 스위치 조작
+            if (btnUp) btnUp.addEventListener('click', () => { if (isCamOn) { selIdx = 0; updateMenu(); } });
+            if (btnDown) btnDown.addEventListener('click', () => { if (isCamOn) { selIdx = 1; updateMenu(); } });
+            if (btnMode) btnMode.addEventListener('click', () => {
+                if (!isCamOn) return;
+                selIdx = selIdx === 0 ? 1 : 0;
+                updateMenu();
+            });
+
+            // 화면 속 메뉴 텍스트(ARCHIVE, NARRATIVE) 직접 클릭 시
+            items.forEach((item, index) => {
+                item.addEventListener('click', () => {
+                    if (!isCamOn) return;
+                    selIdx = index;
+                    updateMenu();
+                    executeMenu();
+                });
+            });
+
+            // OK 또는 셔터 버튼 클릭 시 동작 (꺼져있으면 켜고, 켜져있으면 이동)
+            function handleActionBtn() {
+                if (!isCamOn) {
+                    turnOnCamera();
+                } else {
+                    executeMenu();
+                }
+            }
+
+            function executeMenu() {
+                if (!isCamOn) return;
+                const targetPage = items[selIdx].getAttribute('data-page');
+                
+                // 이동 전 플래시 효과
+                if (flash) {
+                    flash.classList.remove('go');
+                    void flash.offsetWidth;
+                    flash.classList.add('go');
+                }
+
+                setTimeout(() => {
+                    if (typeof window.goToPage === 'function') {
+                        window.goToPage(targetPage);
+                    }
+                }, 300);
+            }
+
+            if (btnOk) btnOk.addEventListener('click', handleActionBtn);
+            if (btnShutter) btnShutter.addEventListener('click', handleActionBtn);
+
+            // 메인 홈으로 돌아왔을 때 카메라를 초기 상태로 되돌리는 함수
+            window.resetCamera = function() {
+                isCamOn = false;
+                selIdx = 0;
+                updateMenu();
+                if (standby) standby.classList.remove('off');
+                if (menu) menu.classList.add('off');
+                if (screen) screen.classList.remove('on');
+                if (ecg) ecg.classList.remove('beat');
+            };
+        });
+    </script>
+
+    <!-- ==========================================
+         [스크립트] ASCII 아트 애니메이션 배경
+    =========================================== -->
+    <script>
+    (function(){
+        const cv=document.getElementById('ascii');
+        if(!cv) return;
+        const cg=cv.getContext('2d');
+        const RAMP=['','⠁','⠃','⠇','⡇','⣇','⣧','⣷','⣿'];
+        
+        function star(g,x,y,R,r,rot){g.beginPath();for(let i=0;i<10;i++){const a=rot+i*Math.PI/5-Math.PI/2,q=i%2?r:R;g[i?'lineTo':'moveTo'](x+Math.cos(a)*q,y+Math.sin(a)*q)}g.closePath()}
+        function spark(g,x,y,R){g.beginPath();g.moveTo(x,y-R);g.quadraticCurveTo(x,y,x+R,y);g.quadraticCurveTo(x,y,x,y+R);g.quadraticCurveTo(x,y,x-R,y);g.quadraticCurveTo(x,y,x,y-R);g.closePath()}
+        function heart(g,x,y,s){g.beginPath();g.moveTo(x,y+s*.9);g.bezierCurveTo(x-s*1.3,y+s*.1,x-s*.7,y-s*.9,x,y-s*.3);g.bezierCurveTo(x+s*.7,y-s*.9,x+s*1.3,y+s*.1,x,y+s*.9);g.closePath()}
+        function heartA(g,x,y,s,rot){
+            g.save();g.translate(x,y);g.rotate(rot);g.scale(s,s);g.lineCap='round';g.lineJoin='round';
+            const st=(w,d)=>{g.lineWidth=w;g.strokeStyle='#4c4c4c';g.beginPath();g.moveTo(d[0],d[1]);g.bezierCurveTo(d[2],d[3],d[4],d[5],d[6],d[7]);g.stroke()};
+            st(.3,[.05,-.5,0,-1,.15,-1.4,.5,-1.35]);st(.3,[.5,-1.35,.85,-1.3,.85,-.9,.78,-.5]);            
+            st(.1,[.18,-1.32,.15,-1.5,.12,-1.65,.1,-1.7]);st(.1,[.33,-1.4,.33,-1.55,.34,-1.7,.34,-1.75]);st(.1,[.47,-1.36,.5,-1.5,.55,-1.62,.6,-1.68]);
+            st(.24,[.4,-.5,.6,-.95,.95,-1,1.2,-.8]);                                                         
+            st(.22,[-.45,-.5,-.5,-.95,-.5,-1.3,-.45,-1.6]);                                                  
+            st(.2,[-.5,.3,-.65,.55,-.7,.75,-.62,.95]);                                                      
+            {const q=g.createRadialGradient(-.25,-.05,.05,0,.2,1.15);q.addColorStop(0,'#c4c4c4');q.addColorStop(.55,'#707070');q.addColorStop(1,'#3a3a3a');g.fillStyle=q}
+            g.beginPath();g.moveTo(-.75,-.35);g.bezierCurveTo(-.95,.3,-.45,.9,-.1,1.2);g.bezierCurveTo(.5,.85,.98,.4,.92,-.2);
+            g.bezierCurveTo(.86,-.58,.4,-.72,.1,-.6);g.bezierCurveTo(-.2,-.76,-.6,-.7,-.75,-.35);g.closePath();g.fill();
+            g.fillStyle='#8e8e8e';g.beginPath();g.ellipse(-.52,-.42,.33,.3,-.3,0,7);g.fill();g.beginPath();g.ellipse(.6,-.5,.3,.22,.5,0,7);g.fill();   
+            g.strokeStyle='#fff';g.lineWidth=.09;
+            [[-.8,-.15,-.3,.05,.3,-.12,.9,-.2],[.05,-.3,0,.35,-.04,.8,-.1,1.15],[.62,-.05,.72,.3,.5,.72,.22,.98],[-.35,.05,-.3,.4,-.2,.7,-.12,.95]].forEach(d=>{g.beginPath();g.moveTo(d[0],d[1]);g.bezierCurveTo(d[2],d[3],d[4],d[5],d[6],d[7]);g.stroke()});
+            g.restore()
+        }
+        
+        function draw(){
+            const W=cv.parentElement.clientWidth, H=cv.parentElement.clientHeight, dpr=Math.min(devicePixelRatio||1,2);
+            const u=Math.min(W,H), c=Math.max(5,Math.min(8,W/165)), ch=c*1.8;
+            const cols=Math.ceil(W/c), rows=Math.ceil(H/ch);
+            const o=document.createElement('canvas');
+            o.width=cols; o.height=rows;
+            const g=o.getContext('2d',{willReadFrequently:true});
+            
+            g.fillStyle='#fff'; g.fillRect(0,0,cols,rows); g.setTransform(1/c,0,0,1/ch,0,0);
+            const P=W<H*.9;
+            const H1=(x,y,z)=>{heart(g,W*x,H*y,u*z);g.fillStyle='#707070';g.fill();heart(g,W*x,H*y,u*z*.6);g.fillStyle='#fff';g.fill()};
+            let sp;
+            
+            if(!P){
+                H1(.1,.5,.11);
+                heartA(g,W*.885,H*.44,u*.13,-.25);
+                sp=[[.07,.2,.025],[.95,.72,.02]];
+            }else{
+                H1(.7,.26,.13);
+                heartA(g,W*.27,H*.8,u*.17,-.25);
+                sp=[[.2,.09,.03],[.86,.92,.025]];
+            }
+            sp.forEach(a=>{spark(g,W*a[0],H*a[1],u*a[2]);g.fillStyle='#555';g.fill()});
+            
+            const d=g.getImageData(0,0,cols,rows).data;
+            cv.width=W*dpr; cv.height=H*dpr; 
+            cg.setTransform(dpr,0,0,dpr,0,0); cg.clearRect(0,0,W,H);
+            cg.font=(c*1.75)+'px "DejaVu Sans Mono",Menlo,"Segoe UI Symbol",monospace';
+            cg.textAlign='center'; cg.textBaseline='middle'; cg.fillStyle='rgba(80,82,94,.72)';
+            
+            for(let y=0;y<rows;y++){
+                for(let x=0;x<cols;x++){
+                    const k=Math.round(Math.pow(1-d[(y*cols+x)*4]/255,.6)*(RAMP.length-1));
+                    if(k>0) cg.fillText(RAMP[k],(x+.5)*c,(y+.5)*ch);
+                }
+            }
+        }
+        
+        let t;
+        addEventListener('resize',()=>{clearTimeout(t);t=setTimeout(draw,150)});
+        draw();
+    })();
     </script>
 </body>
 </html>
